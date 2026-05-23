@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import { createContext, useContext, useEffect, useState, useMemo, ReactNode } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import { useRouter } from 'next/navigation';
 import { User } from '@supabase/supabase-js';
@@ -26,10 +26,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [profile, setProfile] = useState<any | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [supabase] = useState(() => createClient());
+  
+  // Use useMemo to ensure client is created exactly once on the client
+  const supabase = useMemo(() => createClient(), []);
   const router = useRouter();
 
   useEffect(() => {
+    let mounted = true;
+
     const fetchUser = async () => {
       try {
         const { data: { user } } = await supabase.auth.getUser();
@@ -44,7 +48,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       } catch (error) {
         console.error("Auth error:", error);
       } finally {
-        setIsLoading(false);
+        if (mounted) setIsLoading(false);
       }
     };
 
@@ -52,19 +56,32 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (!mounted) return;
+      
       setUser(session?.user || null);
       setIsAuthenticated(!!session?.user);
       
       if (session?.user) {
-        const { data } = await supabase.from('profiles').select('*').eq('id', session.user.id).single();
-        if (data) setProfile(data);
+        try {
+          const { data } = await supabase.from('profiles').select('*').eq('id', session.user.id).single();
+          if (data && mounted) setProfile(data);
+        } catch (err) {
+          console.error("Profile fetch error in auth change:", err);
+        }
       } else {
-        setProfile(null);
+        if (mounted) setProfile(null);
       }
-      setIsLoading(false);
+      if (mounted) setIsLoading(false);
     });
 
+    // Safety timeout to forcefully end loading state after 4 seconds
+    const timeout = setTimeout(() => {
+      if (mounted) setIsLoading(false);
+    }, 4000);
+
     return () => {
+      mounted = false;
+      clearTimeout(timeout);
       subscription.unsubscribe();
     };
   }, [supabase]);
