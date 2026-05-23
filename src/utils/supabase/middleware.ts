@@ -35,8 +35,9 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  const isProtectedRoute = request.nextUrl.pathname.startsWith('/dashboard') || 
-                           request.nextUrl.pathname.startsWith('/checkout')
+  // We will rely on the client-side AuthContext to protect /dashboard and /checkout
+  // This prevents race conditions where the cookie hasn't fully propagated to the server after signup
+  const isProtectedRoute = false;
 
   const isAuthRoute = request.nextUrl.pathname.startsWith('/login') || 
                       request.nextUrl.pathname.startsWith('/signup')

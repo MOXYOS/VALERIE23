@@ -38,6 +38,9 @@ export default function SignupPage() {
     if (error) {
       setError(error.message);
       setIsLoading(false);
+    } else if (!data.session) {
+      setError("Please check your email to confirm your account before logging in.");
+      setIsLoading(false);
     } else {
       router.push('/dashboard');
     }

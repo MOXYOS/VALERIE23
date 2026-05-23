@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronRight, ChevronLeft, ShieldCheck, Box, Lock } from "lucide-react";
 import { useCart } from "@/context/CartContext";
+import { useAuth } from "@/context/AuthContext";
 import { Navbar } from "@/components/Navbar";
 import Image from "next/image";
 import Link from "next/link";
@@ -92,6 +93,7 @@ function CheckoutForm({ clientSecret, total, cartItems, onPaymentSuccess }: { cl
 
 export default function CheckoutPage() {
   const { cart, clearCart } = useCart();
+  const { user, isLoading } = useAuth();
   const router = useRouter();
   const [step, setStep] = useState<CheckoutStep>("shipping");
   const [clientSecret, setClientSecret] = useState<string | null>(null);
@@ -101,15 +103,29 @@ export default function CheckoutPage() {
   const total = subtotal + tax;
 
   useEffect(() => {
+    if (!isLoading && !user) {
+      router.push('/login');
+    }
+  }, [user, isLoading, router]);
+
+  useEffect(() => {
     // Generate PaymentIntent as soon as they reach the page so it's ready
-    if (total > 0 && !clientSecret) {
+    if (total > 0 && !clientSecret && user) {
       createPaymentIntent(total).then((res) => {
         if (res.clientSecret) {
           setClientSecret(res.clientSecret);
         }
       });
     }
-  }, [total, clientSecret]);
+  }, [total, clientSecret, user]);
+
+  if (isLoading || !user) {
+    return (
+      <main className="min-h-screen bg-valerie-bg-dark flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-valerie-accent-gold border-t-transparent rounded-full animate-spin"></div>
+      </main>
+    );
+  }
 
   if (cart.length === 0 && step !== "success") {
     return (
