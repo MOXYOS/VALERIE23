@@ -7,7 +7,7 @@ import Link from "next/link";
 
 export function Hero() {
   return (
-    <section id="home" className="relative min-h-screen flex flex-col lg:flex-row items-center bg-valerie-bg-dark overflow-hidden">
+    <section id="home" className="relative min-h-screen flex flex-col lg:flex-row-reverse items-center bg-valerie-bg-dark overflow-hidden">
       
       {/* Image Background (Absolute on Mobile, Relative Side on Desktop) */}
       <div className="absolute lg:relative inset-0 lg:inset-auto lg:flex-1 w-full h-full lg:h-screen z-0">
