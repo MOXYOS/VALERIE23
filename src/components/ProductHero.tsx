@@ -3,11 +3,18 @@
 import { useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { Star, ShieldCheck, Heart, SlidersHorizontal, Eye } from "lucide-react";
+import { Star, ShieldCheck, Heart, SlidersHorizontal, Eye, ShoppingBag } from "lucide-react";
 import type { CompanionModel } from "@/data/models";
+import { useCart } from "@/context/CartContext";
 
 export function ProductHero({ model }: { model: CompanionModel }) {
   const [activeImage, setActiveImage] = useState(model.images.portrait);
+  const { addToCart } = useCart();
+
+  const handleAddToCart = () => {
+    const basePrice = parseFloat(model.price.replace(/[^0-9.-]+/g, ""));
+    addToCart(model, {}, basePrice);
+  };
 
   const gallery = [
     model.images.portrait,
@@ -110,11 +117,11 @@ export function ProductHero({ model }: { model: CompanionModel }) {
 
               <div className="hidden md:flex flex-col sm:flex-row gap-4 mb-12">
                 <button 
-                  onClick={() => document.getElementById('customization')?.scrollIntoView({ behavior: 'smooth' })}
+                  onClick={handleAddToCart}
                   className="flex-1 flex items-center justify-center px-8 py-5 bg-valerie-accent-gold text-valerie-bg-dark font-medium tracking-wide rounded-full hover:bg-valerie-accent-white transition-all duration-300"
                 >
-                  <SlidersHorizontal size={18} className="mr-3" />
-                  Customize {model.name}
+                  <ShoppingBag size={18} className="mr-3" />
+                  Add to Cart
                 </button>
                 <button className="flex items-center justify-center px-8 py-5 bg-transparent border border-valerie-text-metallic/40 text-valerie-text-primary font-medium tracking-wide rounded-full hover:border-valerie-accent-gold hover:text-valerie-accent-gold transition-all duration-300">
                   <Heart size={18} className="mr-3" />
@@ -142,11 +149,11 @@ export function ProductHero({ model }: { model: CompanionModel }) {
           <span className="text-lg font-light text-valerie-accent-white">{model.price}</span>
         </div>
         <button 
-          onClick={() => document.getElementById('customization')?.scrollIntoView({ behavior: 'smooth' })}
+          onClick={handleAddToCart}
           className="flex items-center justify-center px-6 py-3 bg-valerie-accent-gold text-valerie-bg-dark text-xs font-bold uppercase tracking-widest rounded-full shadow-[0_0_20px_rgba(216,193,160,0.2)]"
         >
-          <SlidersHorizontal size={14} className="mr-2" />
-          Customize
+          <ShoppingBag size={14} className="mr-2" />
+          Add to Cart
         </button>
       </div>
     </>

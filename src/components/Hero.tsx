@@ -28,9 +28,6 @@ export function Hero() {
               Explore Collection
               <ChevronRight size={18} className="ml-2 group-hover:translate-x-1 transition-transform" />
             </button>
-            <button className="flex items-center justify-center px-8 py-4 bg-transparent border border-valerie-text-metallic/40 text-valerie-text-primary font-medium tracking-wide rounded-full hover:border-valerie-accent-gold hover:text-valerie-accent-gold transition-all duration-300">
-              Customize Yours
-            </button>
           </div>
 
           <div className="flex gap-8 text-sm font-light text-valerie-text-metallic border-t border-valerie-text-metallic/20 pt-8">

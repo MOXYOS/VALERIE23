@@ -2,7 +2,6 @@ import { notFound } from "next/navigation";
 import { modelsData } from "@/data/models";
 import { Navbar } from "@/components/Navbar";
 import { ProductHero } from "@/components/ProductHero";
-import { Personalization } from "@/components/Personalization";
 import { Technology } from "@/components/Technology";
 import { Capabilities } from "@/components/Capabilities";
 import { Privacy } from "@/components/Privacy";
@@ -28,7 +27,6 @@ export default async function ModelPage({ params }: { params: Promise<{ id: stri
     <main className="bg-valerie-bg-dark min-h-screen">
       <Navbar />
       <ProductHero model={model} />
-      <Personalization model={model} />
       <Capabilities modelName={model.name} />
       <Privacy />
       <FAQ />
