@@ -4,9 +4,11 @@ import { useCart } from "@/context/CartContext";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Trash2, ArrowRight } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export function CartDrawer() {
   const { cart, isCartOpen, closeCart, removeFromCart } = useCart();
+  const router = useRouter();
 
   // Calculate subtotal using the customized finalPrice if it exists, otherwise fallback to base price
   const subtotal = cart.reduce((total, item) => {
@@ -114,7 +116,7 @@ export function CartDrawer() {
                 <button 
                   onClick={() => {
                     closeCart();
-                    window.location.href = '/checkout';
+                    router.push('/checkout');
                   }}
                   className="w-full flex items-center justify-center px-8 py-4 bg-valerie-accent-gold text-valerie-bg-dark font-medium tracking-wide rounded-full hover:bg-valerie-accent-white transition-all duration-300"
                 >

@@ -47,13 +47,13 @@ export default function SignupPage() {
           </div>
 
           <div className="text-center mb-10">
-            <h1 className="text-3xl font-light text-valerie-text-primary tracking-tight mb-2">Initialize Profile</h1>
-            <p className="text-sm text-valerie-text-secondary tracking-widest uppercase">Begin Neural Synchronization</p>
+            <h1 className="text-3xl font-light text-valerie-text-primary tracking-tight mb-2">Create Account</h1>
+            <p className="text-sm text-valerie-text-secondary tracking-widest uppercase">Register Your Details</p>
           </div>
 
           <form onSubmit={handleSignup} className="space-y-6">
             <div className="space-y-2">
-              <label htmlFor="name" className="text-xs text-valerie-text-metallic tracking-widest uppercase ml-2">Preferred Designation</label>
+              <label htmlFor="name" className="text-xs text-valerie-text-metallic tracking-widest uppercase ml-2">Full Name</label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                   <UserIcon className="h-4 w-4 text-valerie-text-metallic/50" />
@@ -64,14 +64,14 @@ export default function SignupPage() {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   className="w-full bg-valerie-bg-dark/50 border border-valerie-text-metallic/20 rounded-full py-4 pl-12 pr-6 text-valerie-text-primary placeholder:text-valerie-text-metallic/30 focus:outline-none focus:border-valerie-accent-gold/50 transition-colors"
-                  placeholder="How should they address you?"
+                  placeholder="Enter your full name"
                   required
                 />
               </div>
             </div>
 
             <div className="space-y-2">
-              <label htmlFor="email" className="text-xs text-valerie-text-metallic tracking-widest uppercase ml-2">Secure ID (Email)</label>
+              <label htmlFor="email" className="text-xs text-valerie-text-metallic tracking-widest uppercase ml-2">Email Address</label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                   <Lock className="h-4 w-4 text-valerie-text-metallic/50" />
@@ -94,7 +94,7 @@ export default function SignupPage() {
               className="w-full flex items-center justify-center px-8 py-4 mt-8 bg-valerie-accent-gold text-valerie-bg-dark font-medium tracking-wide rounded-full hover:bg-valerie-accent-white transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed group relative overflow-hidden"
             >
               <span className="relative z-10 flex items-center">
-                {isLoading ? "Synchronizing..." : "Create Profile"}
+                {isLoading ? "Signing Up..." : "Sign Up"}
                 {!isLoading && <ArrowRight size={16} className="ml-2 group-hover:translate-x-1 transition-transform" />}
               </span>
             </button>
@@ -102,7 +102,7 @@ export default function SignupPage() {
 
           <div className="mt-8 text-center text-sm text-valerie-text-secondary">
             <p>
-              Already synchronized? <Link href="/login" className="text-valerie-accent-gold hover:text-valerie-accent-white transition-colors">Establish Connection</Link>
+              Already have an account? <Link href="/login" className="text-valerie-accent-gold hover:text-valerie-accent-white transition-colors">Sign In</Link>
             </p>
           </div>
         </motion.div>

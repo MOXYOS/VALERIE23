@@ -46,13 +46,13 @@ export default function LoginPage() {
           </div>
 
           <div className="text-center mb-10">
-            <h1 className="text-3xl font-light text-valerie-text-primary tracking-tight mb-2">Neural Sync</h1>
-            <p className="text-sm text-valerie-text-secondary tracking-widest uppercase">Authenticate Your Identity</p>
+            <h1 className="text-3xl font-light text-valerie-text-primary tracking-tight mb-2">Welcome Back</h1>
+            <p className="text-sm text-valerie-text-secondary tracking-widest uppercase">Sign In To Your Account</p>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-6">
             <div className="space-y-2">
-              <label htmlFor="email" className="text-xs text-valerie-text-metallic tracking-widest uppercase ml-2">Secure ID (Email)</label>
+              <label htmlFor="email" className="text-xs text-valerie-text-metallic tracking-widest uppercase ml-2">Email Address</label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                   <Lock className="h-4 w-4 text-valerie-text-metallic/50" />
@@ -75,7 +75,7 @@ export default function LoginPage() {
               className="w-full flex items-center justify-center px-8 py-4 mt-8 bg-valerie-accent-gold text-valerie-bg-dark font-medium tracking-wide rounded-full hover:bg-valerie-accent-white transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed group relative overflow-hidden"
             >
               <span className="relative z-10 flex items-center">
-                {isLoading ? "Authenticating..." : "Establish Connection"}
+                {isLoading ? "Signing In..." : "Sign In"}
                 {!isLoading && <ArrowRight size={16} className="ml-2 group-hover:translate-x-1 transition-transform" />}
               </span>
             </button>
@@ -83,7 +83,7 @@ export default function LoginPage() {
 
           <div className="mt-8 text-center text-sm text-valerie-text-secondary">
             <p>
-              No profile found? <Link href="/signup" className="text-valerie-accent-gold hover:text-valerie-accent-white transition-colors">Initialize Sync</Link>
+              Don't have an account? <Link href="/signup" className="text-valerie-accent-gold hover:text-valerie-accent-white transition-colors">Sign Up</Link>
             </p>
           </div>
         </motion.div>
