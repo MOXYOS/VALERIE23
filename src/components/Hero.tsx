@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { ChevronRight } from "lucide-react";
-import { ThreeViewer } from "./ThreeViewer";
+import Image from "next/image";
 
 export function Hero() {
   return (
@@ -46,10 +46,17 @@ export function Hero() {
           transition={{ duration: 1.5, ease: "easeOut" }}
           className="absolute inset-0 bg-gradient-to-r from-valerie-bg-dark via-transparent to-transparent z-10"
         />
-        {/* Cinematic 3D Element */}
+        {/* Hyper-realistic Cinematic Image */}
         <div className="w-full h-full bg-valerie-bg-mid relative overflow-hidden flex items-center justify-center">
-          <div className="absolute inset-0 opacity-30 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-valerie-accent-gold/20 via-transparent to-transparent pointer-events-none" />
-          <ThreeViewer />
+          <Image
+            src="/models/hero_model.png"
+            alt="Valerie Hyper Realistic Companion"
+            fill
+            priority
+            className="object-cover object-center lg:object-top"
+            sizes="(max-width: 1024px) 100vw, 50vw"
+          />
+          <div className="absolute inset-0 opacity-40 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-valerie-accent-gold/20 via-transparent to-transparent pointer-events-none" />
         </div>
       </div>
       
