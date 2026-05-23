@@ -11,6 +11,7 @@ import Link from "next/link";
 import { createPaymentIntent } from "@/app/actions/payment";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements, PaymentElement, useStripe, useElements } from "@stripe/react-stripe-js";
+import confetti from "canvas-confetti";
 
 // Make sure to call loadStripe outside of a component’s render to avoid
 // recreating the Stripe object on every render.
@@ -64,16 +65,7 @@ function CheckoutForm({ clientSecret, total, cartItems, onPaymentSuccess }: { cl
   return (
     <form onSubmit={handleSubmit} className="space-y-6 mt-6">
       <PaymentElement options={{ 
-        layout: "tabs",
-        theme: 'night', 
-        variables: {
-          colorPrimary: '#E2C281', // valerie-accent-gold
-          colorBackground: '#1a1a1a', // mid bg
-          colorText: '#ffffff',
-          colorDanger: '#ff4d4f',
-          fontFamily: 'Inter, sans-serif',
-          borderRadius: '8px',
-        }
+        layout: "tabs"
       }} />
       
       {errorMessage && (
@@ -147,6 +139,32 @@ export default function CheckoutPage() {
   const handlePaymentSuccess = (paymentIntentId: string) => {
     setStep("success");
     clearCart();
+    
+    // Trigger cinematic confetti
+    const duration = 3000;
+    const end = Date.now() + duration;
+
+    const frame = () => {
+      confetti({
+        particleCount: 4,
+        angle: 60,
+        spread: 55,
+        origin: { x: 0 },
+        colors: ['#E2C281', '#ffffff', '#1a1a1a']
+      });
+      confetti({
+        particleCount: 4,
+        angle: 120,
+        spread: 55,
+        origin: { x: 1 },
+        colors: ['#E2C281', '#ffffff', '#1a1a1a']
+      });
+
+      if (Date.now() < end) {
+        requestAnimationFrame(frame);
+      }
+    };
+    frame();
   };
 
   return (
@@ -169,7 +187,7 @@ export default function CheckoutPage() {
         </div>
       )}
 
-      <div className="flex-1 max-w-[1200px] mx-auto w-full px-4 md:px-8 lg:px-24 pt-32 pb-24 flex flex-col lg:flex-row gap-12 lg:gap-24 relative z-10">
+      <div className="flex-1 max-w-[1200px] mx-auto w-full px-4 md:px-8 lg:px-24 pt-48 pb-24 flex flex-col lg:flex-row gap-12 lg:gap-24 relative z-10">
         
         {/* Left Side: Form Area */}
         <div className="flex-1">
@@ -223,7 +241,35 @@ export default function CheckoutPage() {
                 </div>
                 
                 {clientSecret ? (
-                  <Elements stripe={stripePromise} options={{ clientSecret }}>
+                  <Elements stripe={stripePromise} options={{ 
+                    clientSecret,
+                    appearance: {
+                      theme: 'night', 
+                      variables: {
+                        colorPrimary: '#E2C281', // valerie-accent-gold
+                        colorBackground: '#0a0a0a', // valerie-bg-dark
+                        colorText: '#ffffff',
+                        colorDanger: '#ff4d4f',
+                        fontFamily: 'Inter, sans-serif',
+                        borderRadius: '8px',
+                      },
+                      rules: {
+                        '.Input': {
+                          backgroundColor: '#1a1a1a', // valerie-bg-mid
+                          borderColor: 'rgba(255,255,255,0.1)',
+                          color: '#ffffff',
+                        },
+                        '.Tab': {
+                          backgroundColor: '#1a1a1a',
+                          borderColor: 'rgba(255,255,255,0.1)',
+                          color: '#ffffff',
+                        },
+                        '.Tab--selected': {
+                          borderColor: '#E2C281',
+                        }
+                      }
+                    }
+                  }}>
                     <CheckoutForm clientSecret={clientSecret} total={total} cartItems={cart} onPaymentSuccess={handlePaymentSuccess} />
                   </Elements>
                 ) : (
