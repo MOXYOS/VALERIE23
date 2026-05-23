@@ -7,10 +7,10 @@ import Link from "next/link";
 
 export function Hero() {
   return (
-    <section id="home" className="relative min-h-screen flex flex-col lg:flex-row-reverse items-center bg-valerie-bg-dark overflow-hidden">
+    <section id="home" className="relative min-h-screen pt-24 flex flex-col lg:flex-row-reverse items-center bg-valerie-bg-dark overflow-hidden">
       
       {/* Image Background (Absolute on Mobile, Relative Side on Desktop) */}
-      <div className="absolute lg:relative inset-0 lg:inset-auto lg:flex-1 w-full h-full lg:h-screen z-0">
+      <div className="absolute lg:relative top-24 lg:top-auto bottom-0 lg:bottom-auto left-0 lg:left-auto right-0 lg:right-auto lg:flex-1 w-full h-auto lg:h-[calc(100vh-6rem)] z-0">
         <motion.div 
           initial={{ opacity: 0, scale: 1.05 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -22,7 +22,7 @@ export function Hero() {
             alt="Valerie Hyper Realistic Companion"
             fill
             priority
-            className="object-cover object-center lg:object-[center_top]"
+            className="object-cover object-center lg:object-top"
             sizes="100vw"
           />
           {/* Gradients for text readability */}
@@ -34,7 +34,7 @@ export function Hero() {
       </div>
       
       {/* Content */}
-      <div className="relative z-20 flex-1 px-4 md:px-8 lg:px-24 flex flex-col justify-end lg:justify-center h-full w-full min-h-screen pb-24 lg:pb-0 pt-[40vh] lg:pt-0 pointer-events-none">
+      <div className="relative z-20 flex-1 px-4 md:px-8 lg:px-24 flex flex-col justify-end lg:justify-center h-full w-full min-h-[calc(100vh-6rem)] pb-24 lg:pb-0 pt-[40vh] lg:pt-0 pointer-events-none">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
