@@ -6,21 +6,28 @@ import { motion } from "framer-motion";
 import { User, Package, Settings, LogOut, ChevronRight, CheckCircle2 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { Navbar } from "@/components/Navbar";
-import Image from "next/image";
 
 export default function DashboardPage() {
-  const { user, isAuthenticated, logout } = useAuth();
+  const { user, profile, isAuthenticated, isLoading, logout } = useAuth();
   const router = useRouter();
   const [activeTab, setActiveTab] = useState("overview");
 
   useEffect(() => {
-    // Basic protection (redirects to login if not authenticated)
-    if (isAuthenticated === false) {
+    if (!isLoading && !isAuthenticated) {
       router.push("/login");
     }
-  }, [isAuthenticated, router]);
+  }, [isAuthenticated, isLoading, router]);
 
-  if (!user) return null; // Prevent hydration mismatch before redirect
+  if (isLoading || !user) {
+    return (
+      <main className="min-h-screen bg-valerie-bg-dark flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-valerie-accent-gold border-t-transparent rounded-full animate-spin"></div>
+      </main>
+    );
+  }
+
+  const displayName = profile?.full_name || user.user_metadata?.full_name || "User";
+  const syncStatus = profile?.neural_sync_status || "Optimizing...";
 
   return (
     <main className="min-h-screen bg-valerie-bg-dark flex flex-col relative overflow-hidden pb-24">
@@ -37,9 +44,9 @@ export default function DashboardPage() {
             <div className="w-12 h-12 rounded-full bg-valerie-bg-mid border border-valerie-text-metallic/20 flex items-center justify-center">
               <User size={20} className="text-valerie-accent-gold" />
             </div>
-            <div>
-              <p className="text-valerie-text-primary text-lg font-light tracking-wide">{user.name}</p>
-              <p className="text-valerie-text-metallic text-xs tracking-widest uppercase">ID: {user.id}</p>
+            <div className="overflow-hidden">
+              <p className="text-valerie-text-primary text-lg font-light tracking-wide truncate">{displayName}</p>
+              <p className="text-valerie-text-metallic text-xs tracking-widest uppercase truncate">ID: {user.id.substring(0,8)}</p>
             </div>
           </div>
 
@@ -86,7 +93,7 @@ export default function DashboardPage() {
             {activeTab === "overview" && (
               <div className="space-y-8">
                 <div>
-                  <h2 className="text-3xl font-light text-valerie-text-primary mb-2">Welcome back, {user.name}</h2>
+                  <h2 className="text-3xl font-light text-valerie-text-primary mb-2">Welcome back, {displayName}</h2>
                   <p className="text-valerie-text-secondary">Your neural sync parameters are fully optimized.</p>
                 </div>
 
@@ -94,7 +101,7 @@ export default function DashboardPage() {
                   <div className="bg-valerie-bg-dark/50 p-6 rounded-2xl border border-valerie-text-metallic/10">
                     <p className="text-xs text-valerie-text-metallic uppercase tracking-widest mb-4">Sync Status</p>
                     <div className="flex items-end gap-2">
-                      <span className="text-2xl text-valerie-accent-white">{user.neuralSyncStatus}</span>
+                      <span className="text-2xl text-valerie-accent-white">{syncStatus}</span>
                       <div className="w-2 h-2 rounded-full bg-valerie-accent-gold mb-2 animate-pulse" />
                     </div>
                   </div>
@@ -172,8 +179,8 @@ export default function DashboardPage() {
                     <input type="text" disabled value={user.email} className="w-full bg-valerie-bg-dark/50 border border-valerie-text-metallic/20 rounded-lg p-3 text-valerie-text-primary opacity-70" />
                   </div>
                   <div>
-                    <label className="text-xs text-valerie-text-metallic tracking-widest uppercase block mb-2">Designation</label>
-                    <input type="text" defaultValue={user.name} className="w-full bg-transparent border border-valerie-text-metallic/40 focus:border-valerie-accent-gold rounded-lg p-3 text-valerie-text-primary outline-none transition-colors" />
+                    <label className="text-xs text-valerie-text-metallic tracking-widest uppercase block mb-2">Full Name</label>
+                    <input type="text" defaultValue={displayName} className="w-full bg-transparent border border-valerie-text-metallic/40 focus:border-valerie-accent-gold rounded-lg p-3 text-valerie-text-primary outline-none transition-colors" />
                   </div>
                   <button className="px-6 py-3 bg-valerie-bg-dark border border-valerie-text-metallic/30 text-valerie-text-primary text-sm tracking-widest uppercase rounded-full hover:border-valerie-accent-gold transition-colors">
                     Save Changes

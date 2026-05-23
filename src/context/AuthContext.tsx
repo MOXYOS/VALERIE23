@@ -1,82 +1,84 @@
 "use client";
 
-import React, { createContext, useContext, useState, ReactNode, useEffect } from "react";
-import { useRouter } from "next/navigation";
-
-export interface User {
-  id: string;
-  email: string;
-  name: string;
-  avatarUrl?: string;
-  neuralSyncStatus: "Pending" | "Active" | "Optimizing";
-}
+import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import { createClient } from '@/utils/supabase/client';
+import { useRouter } from 'next/navigation';
+import { User } from '@supabase/supabase-js';
 
 interface AuthContextType {
   user: User | null;
-  isAuthenticated: boolean;
-  login: (email: string) => Promise<void>;
-  signup: (email: string, name: string) => Promise<void>;
-  logout: () => void;
+  profile: any | null;
+  isAuthenticated: boolean | null;
+  isLoading: boolean;
+  logout: () => Promise<void>;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const AuthContext = createContext<AuthContextType>({
+  user: null,
+  profile: null,
+  isAuthenticated: null,
+  isLoading: true,
+  logout: async () => {},
+});
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
+  const [profile, setProfile] = useState<any | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const supabase = createClient();
   const router = useRouter();
 
-  // On mount, check if there's a mocked user session
   useEffect(() => {
-    const storedUser = localStorage.getItem("valerie23_mock_user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-  }, []);
-
-  const login = async (email: string) => {
-    // Simulate network delay
-    await new Promise(resolve => setTimeout(resolve, 800));
-    const mockUser: User = {
-      id: "usr_" + Math.random().toString(36).substring(2, 9),
-      email,
-      name: email.split('@')[0],
-      neuralSyncStatus: "Active"
+    const fetchUser = async () => {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        setUser(user);
+        setIsAuthenticated(!!user);
+        
+        if (user) {
+          // Fetch profile data if it exists
+          const { data } = await supabase.from('profiles').select('*').eq('id', user.id).single();
+          if (data) setProfile(data);
+        }
+      } catch (error) {
+        console.error("Auth error:", error);
+      } finally {
+        setIsLoading(false);
+      }
     };
-    setUser(mockUser);
-    localStorage.setItem("valerie23_mock_user", JSON.stringify(mockUser));
-    router.push("/dashboard");
-  };
 
-  const signup = async (email: string, name: string) => {
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    const mockUser: User = {
-      id: "usr_" + Math.random().toString(36).substring(2, 9),
-      email,
-      name,
-      neuralSyncStatus: "Pending"
+    fetchUser();
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      setUser(session?.user || null);
+      setIsAuthenticated(!!session?.user);
+      
+      if (session?.user) {
+        const { data } = await supabase.from('profiles').select('*').eq('id', session.user.id).single();
+        if (data) setProfile(data);
+      } else {
+        setProfile(null);
+      }
+      setIsLoading(false);
+    });
+
+    return () => {
+      subscription.unsubscribe();
     };
-    setUser(mockUser);
-    localStorage.setItem("valerie23_mock_user", JSON.stringify(mockUser));
-    router.push("/dashboard");
-  };
+  }, [supabase]);
 
-  const logout = () => {
-    setUser(null);
-    localStorage.removeItem("valerie23_mock_user");
-    router.push("/");
+  const logout = async () => {
+    await supabase.auth.signOut();
+    router.push('/login');
   };
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated: !!user, login, signup, logout }}>
+    <AuthContext.Provider value={{ user, profile, isAuthenticated, isLoading, logout }}>
       {children}
     </AuthContext.Provider>
   );
 }
 
-export function useAuth() {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
-  return context;
-}
+export const useAuth = () => useContext(AuthContext);

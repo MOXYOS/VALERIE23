@@ -1,23 +1,109 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronRight, ChevronLeft, ShieldCheck, CreditCard, Box, Lock } from "lucide-react";
+import { ChevronRight, ChevronLeft, ShieldCheck, Box, Lock } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { Navbar } from "@/components/Navbar";
 import Image from "next/image";
 import Link from "next/link";
+import { createPaymentIntent } from "@/app/actions/payment";
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements, PaymentElement, useStripe, useElements } from "@stripe/react-stripe-js";
 
-type CheckoutStep = "shipping" | "payment" | "review" | "success";
+// Make sure to call loadStripe outside of a component’s render to avoid
+// recreating the Stripe object on every render.
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
+
+type CheckoutStep = "shipping" | "payment" | "success";
+
+function CheckoutForm({ clientSecret, total, onPaymentSuccess }: { clientSecret: string, total: number, onPaymentSuccess: () => void }) {
+  const stripe = useStripe();
+  const elements = useElements();
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!stripe || !elements) {
+      return;
+    }
+
+    setIsProcessing(true);
+
+    const { error } = await stripe.confirmPayment({
+      elements,
+      redirect: 'if_required', // We handle success manually instead of full redirect
+    });
+
+    if (error) {
+      setErrorMessage(error.message ?? "An unknown error occurred.");
+      setIsProcessing(false);
+    } else {
+      onPaymentSuccess();
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-6 mt-6">
+      <PaymentElement options={{ 
+        layout: "tabs",
+        theme: 'night', 
+        variables: {
+          colorPrimary: '#E2C281', // valerie-accent-gold
+          colorBackground: '#1a1a1a', // mid bg
+          colorText: '#ffffff',
+          colorDanger: '#ff4d4f',
+          fontFamily: 'Inter, sans-serif',
+          borderRadius: '8px',
+        }
+      }} />
+      
+      {errorMessage && (
+        <div className="text-red-400 text-sm mt-4 p-4 bg-red-500/10 rounded-xl border border-red-500/20">
+          {errorMessage}
+        </div>
+      )}
+
+      <div className="flex items-center gap-3 mt-8 p-4 bg-valerie-bg-mid/50 rounded-xl border border-valerie-text-metallic/10">
+        <ShieldCheck size={24} className="text-valerie-accent-gold shrink-0" />
+        <p className="text-xs text-valerie-text-secondary">Your payment information is encrypted using military-grade security. VALERIE23 does not store your full card details.</p>
+      </div>
+      
+      <button 
+        type="submit" 
+        disabled={isProcessing || !stripe || !elements}
+        className="w-full px-8 py-5 bg-valerie-accent-gold text-valerie-bg-dark font-medium tracking-wide rounded-full mt-8 hover:bg-valerie-accent-white transition-colors flex items-center justify-center disabled:opacity-50"
+      >
+        {isProcessing ? "Processing Connection..." : `Authorize Payment of $${total.toLocaleString()}`}
+      </button>
+    </form>
+  );
+}
 
 export default function CheckoutPage() {
   const { cart } = useCart();
   const router = useRouter();
   const [step, setStep] = useState<CheckoutStep>("shipping");
-  const [isProcessing, setIsProcessing] = useState(false);
+  const [clientSecret, setClientSecret] = useState<string | null>(null);
 
-  // If cart is empty and we aren't on success screen, show empty state
+  const subtotal = cart.reduce((sum, item) => sum + (item.finalPrice || 0), 0);
+  const tax = subtotal * 0.08; // 8% mock tax
+  const total = subtotal + tax;
+
+  useEffect(() => {
+    // Generate PaymentIntent as soon as they reach the page so it's ready
+    if (total > 0 && !clientSecret) {
+      createPaymentIntent(total).then((res) => {
+        if (res.clientSecret) {
+          setClientSecret(res.clientSecret);
+        }
+      });
+    }
+  }, [total, clientSecret]);
+
   if (cart.length === 0 && step !== "success") {
     return (
       <main className="min-h-screen bg-valerie-bg-dark flex flex-col">
@@ -35,27 +121,17 @@ export default function CheckoutPage() {
     );
   }
 
-  const subtotal = cart.reduce((sum, item) => sum + (item.finalPrice || 0), 0);
-  const tax = subtotal * 0.08; // 8% mock tax
-  const total = subtotal + tax;
-
   const handleNext = () => {
     if (step === "shipping") setStep("payment");
-    else if (step === "payment") setStep("review");
   };
 
   const handleBack = () => {
     if (step === "payment") setStep("shipping");
-    else if (step === "review") setStep("payment");
   };
 
-  const handleCompleteOrder = async () => {
-    setIsProcessing(true);
-    // Simulate API call for payment processing
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    setIsProcessing(false);
+  const handlePaymentSuccess = () => {
     setStep("success");
-    // Ideally clear cart here, but leaving as is for visual demo
+    // Normally, we'd clear cart here, but wait until webhook confirms order
   };
 
   return (
@@ -72,9 +148,7 @@ export default function CheckoutPage() {
             <div className="flex items-center gap-2 md:gap-4 text-[10px] md:text-xs tracking-widest uppercase">
               <span className={step === "shipping" ? "text-valerie-accent-gold" : "text-valerie-text-primary"}>1. Shipping</span>
               <span className="text-valerie-text-metallic/30">-</span>
-              <span className={step === "payment" ? "text-valerie-accent-gold" : "text-valerie-text-primary"}>2. Payment</span>
-              <span className="text-valerie-text-metallic/30">-</span>
-              <span className={step === "review" ? "text-valerie-accent-gold" : "text-valerie-text-primary"}>3. Review</span>
+              <span className={step === "payment" ? "text-valerie-accent-gold" : "text-valerie-text-primary"}>2. Encrypted Payment</span>
             </div>
           </div>
         </div>
@@ -133,74 +207,16 @@ export default function CheckoutPage() {
                   <h2 className="text-3xl font-light text-valerie-text-primary">Encrypted Payment</h2>
                 </div>
                 
-                <div className="space-y-6">
-                  {/* Payment Method Selector */}
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="border border-valerie-accent-gold bg-valerie-accent-gold/10 p-4 rounded-xl flex items-center justify-center gap-2 cursor-pointer">
-                      <CreditCard size={18} className="text-valerie-accent-gold" />
-                      <span className="text-sm font-medium text-valerie-accent-gold">Credit Card</span>
-                    </div>
-                    <div className="border border-valerie-text-metallic/20 bg-valerie-bg-mid/30 p-4 rounded-xl flex items-center justify-center gap-2 cursor-pointer hover:border-valerie-text-metallic/50 transition-colors opacity-50">
-                      <span className="text-sm font-medium text-valerie-text-primary">Crypto Wallet</span>
-                    </div>
+                {clientSecret ? (
+                  <Elements stripe={stripePromise} options={{ clientSecret }}>
+                    <CheckoutForm clientSecret={clientSecret} total={total} onPaymentSuccess={handlePaymentSuccess} />
+                  </Elements>
+                ) : (
+                  <div className="py-12 flex items-center justify-center text-valerie-text-metallic">
+                    <div className="w-6 h-6 border-2 border-valerie-accent-gold border-t-transparent rounded-full animate-spin mr-3"></div>
+                    Initializing Secure Connection...
                   </div>
-
-                  <form className="space-y-6" onSubmit={(e) => { e.preventDefault(); handleNext(); }}>
-                    <div>
-                      <label className="text-xs text-valerie-text-metallic tracking-widest uppercase block mb-2">Card Number</label>
-                      <input required type="text" placeholder="0000 0000 0000 0000" className="w-full bg-valerie-bg-mid/30 border border-valerie-text-metallic/20 rounded-lg p-4 text-valerie-text-primary outline-none focus:border-valerie-accent-gold transition-colors font-mono tracking-widest" />
-                    </div>
-                    <div className="grid grid-cols-2 gap-6">
-                      <div>
-                        <label className="text-xs text-valerie-text-metallic tracking-widest uppercase block mb-2">Expiry</label>
-                        <input required type="text" placeholder="MM/YY" className="w-full bg-valerie-bg-mid/30 border border-valerie-text-metallic/20 rounded-lg p-4 text-valerie-text-primary outline-none focus:border-valerie-accent-gold transition-colors" />
-                      </div>
-                      <div>
-                        <label className="text-xs text-valerie-text-metallic tracking-widest uppercase block mb-2">CVC</label>
-                        <input required type="text" placeholder="123" className="w-full bg-valerie-bg-mid/30 border border-valerie-text-metallic/20 rounded-lg p-4 text-valerie-text-primary outline-none focus:border-valerie-accent-gold transition-colors" />
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-3 mt-8 p-4 bg-valerie-bg-mid/50 rounded-xl border border-valerie-text-metallic/10">
-                      <ShieldCheck size={24} className="text-valerie-accent-gold shrink-0" />
-                      <p className="text-xs text-valerie-text-secondary">Your payment information is encrypted using military-grade security. VALERIE23 does not store your full card details.</p>
-                    </div>
-                    <button type="submit" className="w-full md:w-auto px-8 py-4 bg-valerie-accent-gold text-valerie-bg-dark font-medium tracking-wide rounded-full mt-8 hover:bg-valerie-accent-white transition-colors flex items-center justify-center">
-                      Review Order <ChevronRight size={18} className="ml-2" />
-                    </button>
-                  </form>
-                </div>
-              </motion.div>
-            )}
-
-            {step === "review" && (
-              <motion.div key="review" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
-                <div className="flex items-center gap-4 mb-8">
-                  <button onClick={handleBack} className="p-2 bg-valerie-bg-mid rounded-full text-valerie-text-metallic hover:text-valerie-text-primary"><ChevronLeft size={20} /></button>
-                  <h2 className="text-3xl font-light text-valerie-text-primary">Review & Confirm</h2>
-                </div>
-                
-                <div className="space-y-8">
-                  <div className="bg-valerie-bg-mid/20 border border-valerie-text-metallic/10 rounded-2xl p-6">
-                    <h3 className="text-sm tracking-widest uppercase text-valerie-text-metallic mb-4">Shipping To</h3>
-                    <p className="text-valerie-text-primary font-light">John Doe</p>
-                    <p className="text-valerie-text-secondary font-light">123 Nexus Blvd, Apt 4B<br/>Neo City, CA 90210</p>
-                  </div>
-                  <div className="bg-valerie-bg-mid/20 border border-valerie-text-metallic/10 rounded-2xl p-6">
-                    <h3 className="text-sm tracking-widest uppercase text-valerie-text-metallic mb-4">Payment Method</h3>
-                    <div className="flex items-center gap-3 text-valerie-text-primary">
-                      <CreditCard size={20} className="text-valerie-text-metallic" />
-                      <span className="font-mono tracking-widest">•••• •••• •••• 4242</span>
-                    </div>
-                  </div>
-                  
-                  <button 
-                    onClick={handleCompleteOrder}
-                    disabled={isProcessing}
-                    className="w-full px-8 py-5 bg-valerie-accent-gold text-valerie-bg-dark font-medium tracking-wide rounded-full hover:bg-valerie-accent-white transition-colors flex items-center justify-center disabled:opacity-50 relative overflow-hidden"
-                  >
-                    {isProcessing ? "Processing Connection..." : `Authorize Payment of $${total.toLocaleString()}`}
-                  </button>
-                </div>
+                )}
               </motion.div>
             )}
 

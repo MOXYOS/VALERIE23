@@ -2,22 +2,40 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, Fingerprint, Lock } from "lucide-react";
+import { ArrowRight, Fingerprint, Lock, AlertCircle } from "lucide-react";
 import Link from "next/link";
-import { useAuth } from "@/context/AuthContext";
 import { Navbar } from "@/components/Navbar";
+import { createClient } from "@/utils/supabase/client";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { login } = useAuth();
+  const [error, setError] = useState<string | null>(null);
+  
+  const router = useRouter();
+  const supabase = createClient();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email) return;
+    if (!email || !password) return;
     setIsLoading(true);
-    await login(email);
-    // Router push is handled in AuthContext
+    setError(null);
+    
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) {
+      setError(error.message);
+      setIsLoading(false);
+    } else {
+      router.push('/dashboard');
+      // Let context naturally update, no need to set isLoading(false) here 
+      // since we're redirecting anyway
+    }
   };
 
   return (
@@ -50,20 +68,39 @@ export default function LoginPage() {
             <p className="text-sm text-valerie-text-secondary tracking-widest uppercase">Sign In To Your Account</p>
           </div>
 
+          {error && (
+            <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-xl flex items-start gap-3">
+              <AlertCircle size={18} className="text-red-400 shrink-0 mt-0.5" />
+              <p className="text-sm text-red-400">{error}</p>
+            </div>
+          )}
+
           <form onSubmit={handleLogin} className="space-y-6">
             <div className="space-y-2">
               <label htmlFor="email" className="text-xs text-valerie-text-metallic tracking-widest uppercase ml-2">Email Address</label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <Lock className="h-4 w-4 text-valerie-text-metallic/50" />
-                </div>
                 <input
                   id="email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-valerie-bg-dark/50 border border-valerie-text-metallic/20 rounded-full py-4 pl-12 pr-6 text-valerie-text-primary placeholder:text-valerie-text-metallic/30 focus:outline-none focus:border-valerie-accent-gold/50 transition-colors"
+                  className="w-full bg-valerie-bg-dark/50 border border-valerie-text-metallic/20 rounded-xl py-4 px-6 text-valerie-text-primary placeholder:text-valerie-text-metallic/30 focus:outline-none focus:border-valerie-accent-gold/50 transition-colors"
                   placeholder="Enter your email"
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <label htmlFor="password" className="text-xs text-valerie-text-metallic tracking-widest uppercase ml-2">Password</label>
+              <div className="relative">
+                <input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full bg-valerie-bg-dark/50 border border-valerie-text-metallic/20 rounded-xl py-4 px-6 text-valerie-text-primary placeholder:text-valerie-text-metallic/30 focus:outline-none focus:border-valerie-accent-gold/50 transition-colors"
+                  placeholder="Enter your password"
                   required
                 />
               </div>
