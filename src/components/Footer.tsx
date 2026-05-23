@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 export function Footer() {
   return (
     <footer className="py-20 px-8 lg:px-24 bg-valerie-bg-dark border-t border-valerie-text-metallic/10">
@@ -24,41 +26,41 @@ export function Footer() {
         <div>
           <h5 className="text-sm font-medium tracking-widest text-valerie-text-primary mb-6 uppercase">Collection</h5>
           <ul className="space-y-4 text-sm text-valerie-text-secondary font-light">
-            <li><a href="#" className="hover:text-valerie-accent-gold transition-colors">Valerie A1</a></li>
-            <li><a href="#" className="hover:text-valerie-accent-gold transition-colors">Valerie Luna</a></li>
-            <li><a href="#" className="hover:text-valerie-accent-gold transition-colors">Valerie Nova</a></li>
-            <li><a href="#" className="hover:text-valerie-accent-gold transition-colors">Valerie Stella</a></li>
-            <li><a href="#" className="hover:text-valerie-accent-gold transition-colors">Valerie Eve</a></li>
+            <li><Link href="/collection/valerie-a1" className="hover:text-valerie-accent-gold transition-colors">Valerie A1</Link></li>
+            <li><Link href="/collection/valerie-luna" className="hover:text-valerie-accent-gold transition-colors">Valerie Luna</Link></li>
+            <li><Link href="/collection/valerie-nova" className="hover:text-valerie-accent-gold transition-colors">Valerie Nova</Link></li>
+            <li><Link href="/collection/valerie-stella" className="hover:text-valerie-accent-gold transition-colors">Valerie Stella</Link></li>
+            <li><Link href="/collection/valerie-eve" className="hover:text-valerie-accent-gold transition-colors">Valerie Eve</Link></li>
           </ul>
         </div>
 
         <div>
           <h5 className="text-sm font-medium tracking-widest text-valerie-text-primary mb-6 uppercase">Technology</h5>
           <ul className="space-y-4 text-sm text-valerie-text-secondary font-light">
-            <li><a href="#" className="hover:text-valerie-accent-gold transition-colors">Neural Core</a></li>
-            <li><a href="#" className="hover:text-valerie-accent-gold transition-colors">Adaptive Memory</a></li>
-            <li><a href="#" className="hover:text-valerie-accent-gold transition-colors">Security</a></li>
-            <li><a href="#" className="hover:text-valerie-accent-gold transition-colors">Updates</a></li>
+            <li><Link href="/technology/neural-core" className="hover:text-valerie-accent-gold transition-colors">Neural Core</Link></li>
+            <li><Link href="/technology/adaptive-memory" className="hover:text-valerie-accent-gold transition-colors">Adaptive Memory</Link></li>
+            <li><Link href="/technology/security" className="hover:text-valerie-accent-gold transition-colors">Security</Link></li>
+            <li><Link href="/technology/updates" className="hover:text-valerie-accent-gold transition-colors">Updates</Link></li>
           </ul>
         </div>
 
         <div>
           <h5 className="text-sm font-medium tracking-widest text-valerie-text-primary mb-6 uppercase">Support</h5>
           <ul className="space-y-4 text-sm text-valerie-text-secondary font-light">
-            <li><a href="#" className="hover:text-valerie-accent-gold transition-colors">Concierge</a></li>
-            <li><a href="#" className="hover:text-valerie-accent-gold transition-colors">FAQ</a></li>
-            <li><a href="#" className="hover:text-valerie-accent-gold transition-colors">Warranty</a></li>
-            <li><a href="#" className="hover:text-valerie-accent-gold transition-colors">Contact</a></li>
+            <li><Link href="/support/concierge" className="hover:text-valerie-accent-gold transition-colors">Concierge</Link></li>
+            <li><Link href="/support/faq" className="hover:text-valerie-accent-gold transition-colors">FAQ</Link></li>
+            <li><Link href="/support/warranty" className="hover:text-valerie-accent-gold transition-colors">Warranty</Link></li>
+            <li><Link href="/support/contact" className="hover:text-valerie-accent-gold transition-colors">Contact</Link></li>
           </ul>
         </div>
 
         <div>
           <h5 className="text-sm font-medium tracking-widest text-valerie-text-primary mb-6 uppercase">Legal</h5>
           <ul className="space-y-4 text-sm text-valerie-text-secondary font-light">
-            <li><a href="#" className="hover:text-valerie-accent-gold transition-colors">Privacy Policy</a></li>
-            <li><a href="#" className="hover:text-valerie-accent-gold transition-colors">Terms of Service</a></li>
-            <li><a href="#" className="hover:text-valerie-accent-gold transition-colors">Cookie Policy</a></li>
-            <li><a href="#" className="hover:text-valerie-accent-gold transition-colors">Disclosures</a></li>
+            <li><Link href="/legal/privacy-policy" className="hover:text-valerie-accent-gold transition-colors">Privacy Policy</Link></li>
+            <li><Link href="/legal/terms-of-service" className="hover:text-valerie-accent-gold transition-colors">Terms of Service</Link></li>
+            <li><Link href="/legal/cookie-policy" className="hover:text-valerie-accent-gold transition-colors">Cookie Policy</Link></li>
+            <li><Link href="/legal/disclosures" className="hover:text-valerie-accent-gold transition-colors">Disclosures</Link></li>
           </ul>
         </div>
 
