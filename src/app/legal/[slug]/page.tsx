@@ -4,8 +4,9 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Scale } from "lucide-react";
 
-export default function LegalPage({ params }: { params: { slug: string } }) {
-  const page = legalPages[params.slug];
+export default async function LegalPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const page = legalPages[slug];
   
   if (!page) {
     notFound();

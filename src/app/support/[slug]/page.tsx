@@ -4,8 +4,9 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { LifeBuoy } from "lucide-react";
 
-export default function SupportPage({ params }: { params: { slug: string } }) {
-  const page = supportPages[params.slug];
+export default async function SupportPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const page = supportPages[slug];
   
   if (!page) {
     notFound();
@@ -55,7 +56,7 @@ export default function SupportPage({ params }: { params: { slug: string } }) {
               </div>
             )}
             
-            {params.slug === "contact" && (
+            {slug === "contact" && (
               <div className="mt-12 flex justify-center">
                 <a href="mailto:support@valerie23.com" className="px-8 py-4 bg-valerie-accent-white text-valerie-bg-dark rounded-full font-medium tracking-wide hover:bg-valerie-accent-gold transition-colors">
                   Open Support Ticket

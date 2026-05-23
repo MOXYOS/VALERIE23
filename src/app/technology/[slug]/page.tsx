@@ -4,8 +4,9 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Cpu } from "lucide-react";
 
-export default function TechnologyPage({ params }: { params: { slug: string } }) {
-  const page = technologyPages[params.slug];
+export default async function TechnologyPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const page = technologyPages[slug];
   
   if (!page) {
     notFound();

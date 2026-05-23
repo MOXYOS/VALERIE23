@@ -6,8 +6,9 @@ import { Footer } from "@/components/Footer";
 import Link from "next/link";
 import { ChevronRight, ArrowLeft } from "lucide-react";
 
-export default function CollectionModelPage({ params }: { params: { modelId: string } }) {
-  const model = modelsData[params.modelId];
+export default async function CollectionModelPage({ params }: { params: Promise<{ modelId: string }> }) {
+  const { modelId } = await params;
+  const model = modelsData[modelId];
   
   if (!model) {
     notFound();
