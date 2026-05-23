@@ -12,6 +12,7 @@ export default function DashboardPage() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState("overview");
   const [orders, setOrders] = useState<any[]>([]);
+  const [showDisconnectModal, setShowDisconnectModal] = useState(false);
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
@@ -92,7 +93,7 @@ export default function DashboardPage() {
           </nav>
 
           <button 
-            onClick={logout}
+            onClick={() => setShowDisconnectModal(true)}
             className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm tracking-wide text-red-400/80 hover:bg-red-400/10 transition-all mt-auto"
           >
             <LogOut size={16} />
@@ -242,6 +243,34 @@ export default function DashboardPage() {
         </div>
 
       </div>
+
+      {showDisconnectModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+          <div className="bg-valerie-bg-dark border border-valerie-text-metallic/20 p-8 rounded-3xl max-w-md w-full shadow-2xl">
+            <h3 className="text-xl text-valerie-text-primary font-light mb-4">Disconnect Neural Link?</h3>
+            <p className="text-valerie-text-secondary text-sm mb-8">
+              Are you sure you want to disconnect? Your session will be terminated and your sync progress securely paused.
+            </p>
+            <div className="flex gap-4">
+              <button 
+                onClick={() => setShowDisconnectModal(false)}
+                className="flex-1 px-4 py-3 border border-valerie-text-metallic/20 text-valerie-text-primary rounded-xl hover:bg-valerie-bg-mid transition-all"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={() => {
+                  setShowDisconnectModal(false);
+                  logout();
+                }}
+                className="flex-1 px-4 py-3 bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl hover:bg-red-500/20 transition-all"
+              >
+                Disconnect
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 }

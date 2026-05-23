@@ -26,7 +26,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [profile, setProfile] = useState<any | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const supabase = createClient();
+  const [supabase] = useState(() => createClient());
   const router = useRouter();
 
   useEffect(() => {
@@ -70,8 +70,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [supabase]);
 
   const logout = async () => {
-    await supabase.auth.signOut();
-    router.push('/login');
+    try {
+      await supabase.auth.signOut();
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setUser(null);
+      setIsAuthenticated(false);
+      setProfile(null);
+      router.push('/login');
+    }
   };
 
   return (
