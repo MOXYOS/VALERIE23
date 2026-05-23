@@ -19,7 +19,7 @@ export function Navbar() {
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-8 py-6 bg-valerie-bg-dark/80 backdrop-blur-md border-b border-valerie-text-metallic/20"
+        className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 md:px-8 py-6 bg-valerie-bg-dark/80 backdrop-blur-md border-b border-valerie-text-metallic/20"
       >
         <div className="flex-1">
           <Link href="/" className="text-xl tracking-[0.2em] font-light text-valerie-accent-white">
@@ -67,7 +67,7 @@ export function Navbar() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="fixed inset-0 z-40 bg-valerie-bg-dark pt-24 px-8"
+            className="fixed inset-0 z-40 bg-valerie-bg-dark pt-24 px-4 md:px-8"
           >
             <div className="flex flex-col space-y-8 text-2xl font-light tracking-wide">
               <Link href="/" onClick={() => setIsMobileMenuOpen(false)}>Home</Link>

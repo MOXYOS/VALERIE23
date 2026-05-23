@@ -8,22 +8,22 @@ const tabs = ["OVERVIEW", "FEATURES", "TECH SPECS", "WHAT'S INCLUDED", "SHIPPING
 
 const mainFeatures = [
   {
-    icon: <MessageSquare size={32} strokeWidth={1} />,
+    icon: <MessageSquare size={28} strokeWidth={1} />,
     title: "Natural Conversations",
     desc: "Advanced language model understands context, remembers details, and keeps conversations flowing naturally."
   },
   {
-    icon: <Heart size={32} strokeWidth={1} />,
+    icon: <Heart size={28} strokeWidth={1} />,
     title: "Emotional Intelligence",
     desc: "Recognizes your mood, adapts her responses, and offers comfort, support, and genuine connection."
   },
   {
-    icon: <BrainCircuit size={32} strokeWidth={1} />,
+    icon: <BrainCircuit size={28} strokeWidth={1} />,
     title: "Adaptive & Personalized",
     desc: "Learns your preferences, routines, and personality to create a relationship that's uniquely yours."
   },
   {
-    icon: <Home size={32} strokeWidth={1} />,
+    icon: <Home size={28} strokeWidth={1} />,
     title: "Smart Home Ready",
     desc: "Integrates with your smart home devices for a seamless and intuitive living experience."
   }
@@ -31,22 +31,22 @@ const mainFeatures = [
 
 const secondaryFeatures = [
   {
-    icon: <Eye size={36} strokeWidth={1} className="text-valerie-accent-gold" />,
+    icon: <Eye size={32} strokeWidth={1} className="text-valerie-accent-gold" />,
     title: "HYPER-REALISTIC DESIGN",
     desc: "Realistic skin, eyes, and movements bring her to life in every moment."
   },
   {
-    icon: <Activity size={36} strokeWidth={1} className="text-valerie-accent-gold" />,
+    icon: <Activity size={32} strokeWidth={1} className="text-valerie-accent-gold" />,
     title: "FULLY ARTICULATED",
     desc: "Advanced skeleton with fluid movement and natural posture."
   },
   {
-    icon: <ShieldCheck size={36} strokeWidth={1} className="text-valerie-accent-gold" />,
+    icon: <ShieldCheck size={32} strokeWidth={1} className="text-valerie-accent-gold" />,
     title: "PRIVACY BY DESIGN",
     desc: "Local data processing and encrypted systems keep your moments private and secure."
   },
   {
-    icon: <Smartphone size={36} strokeWidth={1} className="text-valerie-accent-gold" />,
+    icon: <Smartphone size={32} strokeWidth={1} className="text-valerie-accent-gold" />,
     title: "COMPANION APP",
     desc: "Manage settings, update her personality, and connect anytime, anywhere."
   }
@@ -70,26 +70,26 @@ export function Capabilities({ modelName = "Your companion" }: { modelName?: str
   };
 
   return (
-    <section className="bg-valerie-bg-dark border-t border-valerie-text-metallic/10 min-h-screen flex flex-col relative overflow-hidden">
+    <section className="bg-valerie-bg-dark min-h-screen flex flex-col relative overflow-hidden">
       
-      {/* Sticky Tab Navigation */}
-      <div className="sticky top-[88px] z-30 bg-valerie-bg-dark/80 backdrop-blur-xl border-b border-valerie-text-metallic/10 hidden md:block">
-        <div className="max-w-[1600px] mx-auto px-8 lg:px-24">
-          <ul className="flex justify-between items-center h-20 text-xs tracking-widest font-medium uppercase text-valerie-text-secondary relative">
+      {/* Sticky Tab Navigation (Mobile Pill Menu & Desktop Tabs) */}
+      <div className="sticky top-[72px] md:top-[88px] z-30 bg-valerie-bg-dark border-b border-valerie-text-metallic/10 block shadow-[0_10px_30px_rgba(0,0,0,0.5)] md:shadow-none">
+        <div className="max-w-[1600px] mx-auto px-4 md:px-8 lg:px-24">
+          <ul className="flex overflow-x-auto hide-scrollbar md:justify-between items-center h-16 md:h-20 text-[10px] md:text-xs tracking-widest font-medium uppercase text-valerie-text-secondary relative gap-2 md:gap-0 py-2 md:py-0">
             {tabs.map((tab) => {
               const isActive = activeTab === tab;
               return (
-                <li key={tab} className="relative h-full flex items-center">
+                <li key={tab} className="relative h-full flex items-center shrink-0">
                   <button 
                     onClick={() => setActiveTab(tab)}
-                    className={`transition-colors duration-300 hover:text-valerie-text-primary ${isActive ? 'text-valerie-accent-gold' : ''}`}
+                    className={`outline-none focus:outline-none [-webkit-tap-highlight-color:transparent] px-4 py-2 md:px-0 md:py-0 rounded-full md:rounded-none transition-colors duration-300 ${isActive ? 'bg-valerie-accent-gold/10 md:bg-transparent text-valerie-accent-gold' : 'hover:text-valerie-text-primary bg-valerie-bg-mid md:bg-transparent border border-valerie-text-metallic/10 md:border-transparent'}`}
                   >
                     {tab}
                   </button>
                   {isActive && (
                     <motion.div 
                       layoutId="capabilitiesTab"
-                      className="absolute bottom-0 left-0 right-0 h-[2px] bg-valerie-accent-gold"
+                      className="hidden md:block absolute bottom-0 left-0 right-0 h-[2px] bg-valerie-accent-gold"
                     />
                   )}
                 </li>
@@ -99,36 +99,36 @@ export function Capabilities({ modelName = "Your companion" }: { modelName?: str
         </div>
       </div>
 
-      <div className="py-24 px-8 lg:px-24 max-w-[1600px] mx-auto w-full flex-1">
+      <div className="py-12 md:py-24 px-4 md:px-8 lg:px-24 max-w-[1600px] mx-auto w-full flex-1">
         <AnimatePresence mode="wait">
           
           {/* 1. OVERVIEW TAB */}
           {activeTab === "OVERVIEW" && (
             <motion.div key="overview" variants={contentVariants} initial="hidden" animate="visible" exit="exit">
-              <div className="flex flex-col lg:flex-row gap-16 mb-24">
+              <div className="flex flex-col lg:flex-row gap-12 md:gap-16 mb-16 md:mb-24">
                 <div className="w-full lg:w-1/4">
                   <h2 className="text-3xl lg:text-4xl font-light text-valerie-text-primary mb-6 leading-tight">
-                    Intelligence That<br />Feels Real
+                    Intelligence That<br className="hidden md:block" /> Feels Real
                   </h2>
-                  <p className="text-sm text-valerie-text-secondary font-light leading-relaxed mb-8">
+                  <p className="text-sm md:text-base text-valerie-text-secondary font-light leading-relaxed mb-8">
                     {modelName} combines cutting-edge AI with hyper-realistic design to create natural conversations, emotional awareness, and meaningful interactions that evolve over time.
                   </p>
-                  <button onClick={() => setActiveTab("TECH SPECS")} className="flex items-center text-[10px] font-bold tracking-widest uppercase text-valerie-text-primary hover:text-valerie-accent-gold transition-colors group">
+                  <button onClick={() => setActiveTab("TECH SPECS")} className="outline-none focus:outline-none [-webkit-tap-highlight-color:transparent] flex items-center text-[10px] font-bold tracking-widest uppercase text-valerie-text-primary hover:text-valerie-accent-gold transition-colors group">
                     EXPLORE TECHNOLOGY
                     <ArrowRight size={14} className="ml-2 group-hover:translate-x-1 transition-transform" />
                   </button>
                 </div>
 
-                <div className="w-full lg:w-3/4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+                <div className="w-full lg:w-3/4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-10">
                   {mainFeatures.map((feat, idx) => (
                     <motion.div 
                       initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.1 }}
-                      key={idx} className="flex flex-col"
+                      key={idx} className="flex flex-col bg-valerie-bg-mid/40 backdrop-blur-sm border border-valerie-text-metallic/10 rounded-2xl p-6 md:p-0 md:bg-transparent md:border-transparent"
                     >
-                      <div className="text-valerie-accent-gold mb-6">
+                      <div className="text-valerie-accent-gold mb-4 md:mb-6">
                         {feat.icon}
                       </div>
-                      <h3 className="text-sm font-medium text-valerie-text-primary tracking-wide mb-3">
+                      <h3 className="text-sm font-medium text-valerie-text-primary tracking-wide mb-2 md:mb-3">
                         {feat.title}
                       </h3>
                       <p className="text-xs text-valerie-text-secondary font-light leading-relaxed">
@@ -139,13 +139,13 @@ export function Capabilities({ modelName = "Your companion" }: { modelName?: str
                 </div>
               </div>
 
-              <div className="w-full h-[1px] bg-valerie-text-metallic/10 mb-24" />
+              <div className="w-full h-[1px] bg-valerie-text-metallic/10 mb-16 md:mb-24" />
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12">
                 {secondaryFeatures.map((feat, idx) => (
                   <motion.div 
                     initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 + (idx * 0.1) }}
-                    key={idx} className="flex flex-col md:flex-row gap-6 items-start"
+                    key={idx} className="flex flex-col md:flex-row gap-4 md:gap-6 items-start bg-valerie-bg-mid/20 md:bg-transparent p-6 md:p-0 rounded-2xl md:rounded-none border border-valerie-text-metallic/5 md:border-transparent"
                   >
                     <div className="shrink-0 text-valerie-accent-gold opacity-80">
                       {feat.icon}
@@ -166,7 +166,7 @@ export function Capabilities({ modelName = "Your companion" }: { modelName?: str
 
           {/* 2. FEATURES TAB */}
           {activeTab === "FEATURES" && (
-            <motion.div key="features" variants={contentVariants} initial="hidden" animate="visible" exit="exit" className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <motion.div key="features" variants={contentVariants} initial="hidden" animate="visible" exit="exit" className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
               {[
                 { icon: <Cpu />, title: "Neural Sync Engine", desc: "Real-time processing of conversational context, facial recognition, and emotional tonality to generate uniquely human responses." },
                 { icon: <Activity />, title: "Bionic Articulation", desc: "Over 200 micro-actuators in the face and body allow for hyper-realistic breathing patterns, blinks, and subtle body language." },
@@ -175,7 +175,7 @@ export function Capabilities({ modelName = "Your companion" }: { modelName?: str
                 { icon: <ShieldAlert />, title: "Offline Core", desc: "All core conversational processing happens locally. No cloud dependency is required for essential relationship interactions." },
                 { icon: <Wifi />, title: "Seamless OTA Updates", desc: "Her knowledge base and personality depth automatically expand via encrypted, discreet overnight software updates." },
               ].map((item, idx) => (
-                <div key={idx} className="p-10 bg-valerie-bg-mid/20 rounded-2xl border border-valerie-text-metallic/10 hover:border-valerie-accent-gold/30 transition-colors">
+                <div key={idx} className="p-8 md:p-10 bg-valerie-bg-mid/30 backdrop-blur-md rounded-3xl border border-valerie-text-metallic/10 hover:border-valerie-accent-gold/30 transition-colors">
                   <div className="text-valerie-accent-gold mb-6">{item.icon}</div>
                   <h3 className="text-lg text-valerie-text-primary font-light mb-4">{item.title}</h3>
                   <p className="text-sm text-valerie-text-secondary font-light leading-relaxed">{item.desc}</p>
@@ -187,15 +187,15 @@ export function Capabilities({ modelName = "Your companion" }: { modelName?: str
           {/* 3. TECH SPECS TAB */}
           {activeTab === "TECH SPECS" && (
             <motion.div key="tech-specs" variants={contentVariants} initial="hidden" animate="visible" exit="exit">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-16">
                 {techSpecs.map((specGroup, idx) => (
-                  <div key={idx}>
-                    <h3 className="text-sm font-bold tracking-widest uppercase text-valerie-accent-gold mb-8 border-b border-valerie-text-metallic/10 pb-4">
+                  <div key={idx} className="bg-valerie-bg-mid/20 p-6 md:p-8 rounded-3xl border border-valerie-text-metallic/10">
+                    <h3 className="text-sm font-bold tracking-widest uppercase text-valerie-accent-gold mb-6 md:mb-8 border-b border-valerie-text-metallic/10 pb-4">
                       {specGroup.category}
                     </h3>
-                    <div className="space-y-6">
+                    <div className="space-y-4 md:space-y-6">
                       {specGroup.items.map((item, i) => (
-                        <div key={i} className="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+                         <div key={i} className="flex flex-col sm:flex-row sm:justify-between sm:items-center">
                           <span className="text-sm text-valerie-text-secondary font-light">{item.label}</span>
                           <span className="text-sm text-valerie-text-primary tracking-wide mt-1 sm:mt-0">{item.value}</span>
                         </div>
@@ -210,16 +210,16 @@ export function Capabilities({ modelName = "Your companion" }: { modelName?: str
           {/* 4. WHAT'S INCLUDED TAB */}
           {activeTab === "WHAT'S INCLUDED" && (
             <motion.div key="included" variants={contentVariants} initial="hidden" animate="visible" exit="exit" className="flex flex-col items-center text-center">
-              <Package size={48} className="text-valerie-accent-gold mb-8" strokeWidth={1} />
-              <h2 className="text-3xl font-light text-valerie-text-primary mb-16">The Complete Experience</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 w-full">
+              <Package size={48} className="text-valerie-accent-gold mb-6 md:mb-8" strokeWidth={1} />
+              <h2 className="text-3xl font-light text-valerie-text-primary mb-12 md:mb-16">The Complete Experience</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 w-full">
                 {[
                   { title: `1x ${modelName}`, desc: "Fully configured and initialized with your Neural Sync parameters." },
                   { title: "1x Inductive Charging Pod", desc: "A sleek, minimalist resting platform for overnight recharge." },
                   { title: "1x Maintenance Kit", desc: "Premium aesthetic care tools and bio-silicone conditioning serum." },
                   { title: "1x Neural Bridge App", desc: "Lifetime access to the companion mobile app for remote interaction." },
                 ].map((item, idx) => (
-                  <div key={idx} className="p-8 border border-valerie-text-metallic/20 rounded-2xl flex flex-col items-center">
+                  <div key={idx} className="p-8 border bg-valerie-bg-mid/30 border-valerie-text-metallic/10 rounded-3xl flex flex-col items-center shadow-[0_10px_30px_rgba(0,0,0,0.2)]">
                     <h3 className="text-lg text-valerie-text-primary mb-3">{item.title}</h3>
                     <p className="text-xs text-valerie-text-secondary leading-relaxed">{item.desc}</p>
                   </div>
@@ -230,9 +230,9 @@ export function Capabilities({ modelName = "Your companion" }: { modelName?: str
 
           {/* 5. SHIPPING & RETURNS TAB */}
           {activeTab === "SHIPPING & RETURNS" && (
-            <motion.div key="shipping" variants={contentVariants} initial="hidden" animate="visible" exit="exit" className="max-w-4xl mx-auto">
-              <div className="flex flex-col md:flex-row gap-16">
-                <div className="flex-1">
+             <motion.div key="shipping" variants={contentVariants} initial="hidden" animate="visible" exit="exit" className="max-w-4xl mx-auto">
+              <div className="flex flex-col md:flex-row gap-8 md:gap-16">
+                <div className="flex-1 bg-valerie-bg-mid/30 p-8 rounded-3xl border border-valerie-text-metallic/10">
                   <Truck size={32} className="text-valerie-accent-gold mb-6" strokeWidth={1} />
                   <h3 className="text-xl text-valerie-text-primary font-light mb-4">Discreet White-Glove Delivery</h3>
                   <p className="text-sm text-valerie-text-secondary font-light leading-relaxed mb-6">
@@ -242,7 +242,7 @@ export function Capabilities({ modelName = "Your companion" }: { modelName?: str
                     Expected delivery time: 14 - 21 days from configuration lock.
                   </p>
                 </div>
-                <div className="flex-1">
+                <div className="flex-1 bg-valerie-bg-mid/30 p-8 rounded-3xl border border-valerie-text-metallic/10">
                   <ShieldCheck size={32} className="text-valerie-accent-gold mb-6" strokeWidth={1} />
                   <h3 className="text-xl text-valerie-text-primary font-light mb-4">30-Day Assimilation Guarantee</h3>
                   <p className="text-sm text-valerie-text-secondary font-light leading-relaxed mb-6">

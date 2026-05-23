@@ -122,21 +122,22 @@ export function Personalization({ model }: { model?: CompanionModel }) {
   }).format(finalPrice);
 
   return (
-    <section id="customization" className="py-32 px-8 lg:px-24 bg-valerie-bg-dark relative overflow-hidden">
+    <section id="customization" className="py-24 md:py-32 px-4 md:px-8 lg:px-24 bg-valerie-bg-dark relative overflow-hidden">
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-valerie-accent-gold/5 rounded-full blur-[120px] pointer-events-none" />
 
       <div className="max-w-[1200px] mx-auto flex flex-col relative z-10">
         
-        <div className="text-center mb-16">
-          <p className="text-xs tracking-[0.3em] text-valerie-text-secondary uppercase mb-4">Neural Sync</p>
-          <h2 className="text-4xl font-thin tracking-wide text-valerie-text-primary">
-            Designed Around <span className="text-valerie-accent-gold text-glow">You</span>
+        <div className="text-center mb-10 md:mb-16">
+          <p className="text-[10px] md:text-xs tracking-[0.3em] text-valerie-text-secondary uppercase mb-4">Neural Sync</p>
+          <h2 className="text-4xl lg:text-5xl font-thin tracking-wide text-valerie-text-primary">
+            Designed Around <br className="md:hidden" /> <span className="text-valerie-accent-gold text-glow">You</span>
           </h2>
         </div>
 
-        <div className="flex flex-col lg:flex-row gap-16">
+        <div className="flex flex-col lg:flex-row gap-6 lg:gap-16">
           
-          <div className="w-full lg:w-1/3 flex flex-col space-y-2 border-l border-valerie-text-metallic/10 pl-6">
+          {/* Mobile Sticky Tab Menu */}
+          <div className="w-full lg:w-1/3 flex flex-row lg:flex-col overflow-x-auto hide-scrollbar space-x-3 lg:space-x-0 lg:space-y-2 lg:border-l border-valerie-text-metallic/10 pb-4 lg:pb-0 lg:pl-6 sticky top-[72px] lg:static bg-valerie-bg-dark/80 backdrop-blur-xl lg:bg-transparent z-20 py-4 lg:py-0 -mx-4 px-4 md:mx-0 md:px-0">
             {configuratorData.map((category) => {
               const isActive = activeTab === category.id;
               const selectedValue = selections[category.title];
@@ -145,19 +146,19 @@ export function Personalization({ model }: { model?: CompanionModel }) {
                 <button
                   key={category.id}
                   onClick={() => setActiveTab(category.id)}
-                  className="flex flex-col items-start py-4 group text-left relative"
+                  className={`flex flex-col items-center lg:items-start py-3 px-6 lg:px-0 lg:py-4 group relative shrink-0 rounded-full lg:rounded-none transition-all duration-300 outline-none focus:outline-none [-webkit-tap-highlight-color:transparent] ${isActive ? 'bg-valerie-accent-gold/10 lg:bg-transparent' : 'bg-valerie-bg-mid lg:bg-transparent border border-valerie-text-metallic/10 lg:border-transparent'}`}
                 >
-                  <span className={`text-sm tracking-widest uppercase transition-colors duration-300 ${isActive ? 'text-valerie-accent-gold' : 'text-valerie-text-secondary group-hover:text-valerie-text-primary'}`}>
+                  <span className={`text-[10px] md:text-sm tracking-widest uppercase transition-colors duration-300 ${isActive ? 'text-valerie-accent-gold' : 'text-valerie-text-secondary group-hover:text-valerie-text-primary'}`}>
                     {category.title}
                   </span>
-                  <span className="text-xs text-valerie-text-metallic font-light mt-1">
+                  <span className="hidden lg:block text-xs text-valerie-text-metallic font-light mt-1">
                     {selectedValue}
                   </span>
                   
                   {isActive && (
                     <motion.div 
-                      layoutId="activeTabIndicator"
-                      className="absolute left-[-25px] top-0 bottom-0 w-[2px] bg-valerie-accent-gold"
+                      layoutId="activeTabIndicatorConfig"
+                      className="hidden lg:block absolute left-[-25px] top-0 bottom-0 w-[2px] bg-valerie-accent-gold"
                     />
                   )}
                 </button>
@@ -174,7 +175,7 @@ export function Personalization({ model }: { model?: CompanionModel }) {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -20 }}
                   transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                  className={`grid gap-6 ${activeCategory.id === 'outfit' ? 'grid-cols-2 lg:grid-cols-2' : 'grid-cols-1 sm:grid-cols-2'}`}
+                  className={`grid gap-4 md:gap-6 ${activeCategory.id === 'outfit' ? 'grid-cols-2 lg:grid-cols-2' : 'grid-cols-2 sm:grid-cols-2'}`}
                 >
                   {activeCategory.options.map((option) => {
                     const isSelected = selections[activeCategory.title] === option.label;
@@ -188,54 +189,54 @@ export function Personalization({ model }: { model?: CompanionModel }) {
                         whileHover="hover"
                         animate={isSelected ? "active" : "idle"}
                         onClick={() => handleSelect(activeCategory.title, option.label)}
-                        className={`group relative flex flex-col text-left rounded-2xl overflow-hidden border transition-all duration-500 ${
+                        className={`group relative flex flex-col text-left rounded-2xl md:rounded-3xl overflow-hidden border transition-all duration-500 outline-none focus:outline-none [-webkit-tap-highlight-color:transparent] ${
                           isSelected 
                             ? 'border-valerie-accent-gold/60 bg-valerie-accent-gold/5 shadow-[0_0_30px_rgba(216,193,160,0.1)]' 
-                            : 'border-valerie-text-metallic/10 hover:border-valerie-text-metallic/30 bg-valerie-bg-mid/20'
+                            : 'border-valerie-text-metallic/10 hover:border-valerie-text-metallic/30 bg-valerie-bg-mid/40 backdrop-blur-sm'
                         }`}
                       >
                         {hasImage && (
-                          <div className="relative w-full aspect-[4/3] overflow-hidden mb-4 bg-valerie-bg-dark">
+                          <div className="relative w-full aspect-[3/4] md:aspect-[4/3] overflow-hidden bg-valerie-bg-dark">
                             <Image 
                               src={(option as any).image!} 
                               alt={option.label}
                               fill
                               className={`object-cover transition-transform duration-1000 ${isSelected ? 'scale-105' : 'group-hover:scale-105'}`}
                             />
-                            <div className="absolute inset-0 bg-gradient-to-t from-valerie-bg-dark to-transparent opacity-80" />
+                            <div className="absolute inset-0 bg-gradient-to-t from-valerie-bg-dark via-valerie-bg-dark/40 to-transparent opacity-90" />
                           </div>
                         )}
 
-                        <div className={`p-6 ${hasImage ? 'absolute bottom-0 left-0 right-0 z-10' : ''}`}>
+                        <div className={`p-4 md:p-6 flex flex-col h-full ${hasImage ? 'absolute bottom-0 left-0 right-0 z-10' : ''}`}>
                           
                           {/* Animated Icon and Price */}
-                          <div className="flex justify-between items-start mb-4">
+                          <div className="flex justify-between items-start mb-3 md:mb-4">
                             {!hasImage && Icon && (
                               <motion.div 
                                 variants={iconVariants}
                                 className={`${isSelected ? 'text-valerie-accent-gold' : 'text-valerie-text-metallic'}`}
                               >
-                                <Icon size={28} strokeWidth={1} />
+                                <Icon className="w-6 h-6 md:w-8 md:h-8" strokeWidth={1} />
                               </motion.div>
                             )}
                             
                             {/* Price Upcharge Indicator */}
                             {option.upcharge > 0 && (
-                              <span className={`text-[10px] tracking-widest font-bold px-2 py-1 rounded-sm ${isSelected ? 'bg-valerie-accent-gold/20 text-valerie-accent-gold' : 'bg-white/5 text-valerie-text-secondary'}`}>
+                              <span className={`text-[9px] md:text-[10px] tracking-widest font-bold px-2 py-1 rounded-sm ${isSelected ? 'bg-valerie-accent-gold/20 text-valerie-accent-gold' : 'bg-white/5 text-valerie-text-secondary'}`}>
                                 +${option.upcharge}
                               </span>
                             )}
                           </div>
 
-                          <h4 className={`text-sm font-medium tracking-wide mb-2 transition-colors duration-300 ${isSelected ? 'text-valerie-accent-gold' : 'text-valerie-text-primary'}`}>
+                          <h4 className={`text-xs md:text-sm font-medium tracking-wide mb-1 md:mb-2 transition-colors duration-300 ${isSelected ? 'text-valerie-accent-gold' : 'text-valerie-text-primary'}`}>
                             {option.label}
                           </h4>
-                          <p className={`text-xs font-light leading-relaxed ${isSelected ? 'text-valerie-text-secondary' : 'text-valerie-text-metallic'}`}>
+                          <p className={`hidden md:block text-xs font-light leading-relaxed ${isSelected ? 'text-valerie-text-secondary' : 'text-valerie-text-metallic'}`}>
                             {option.desc}
                           </p>
                         </div>
                         
-                        <div className={`absolute top-4 right-4 w-2 h-2 rounded-full transition-all duration-500 ${isSelected && (!option.upcharge) ? 'bg-valerie-accent-gold shadow-[0_0_10px_rgba(216,193,160,1)]' : 'bg-transparent'}`} />
+                        <div className={`absolute top-3 right-3 md:top-4 md:right-4 w-1.5 h-1.5 md:w-2 md:h-2 rounded-full transition-all duration-500 ${isSelected && (!option.upcharge) ? 'bg-valerie-accent-gold shadow-[0_0_10px_rgba(216,193,160,1)]' : 'bg-transparent'}`} />
                       </motion.button>
                     );
                   })}
@@ -250,7 +251,7 @@ export function Personalization({ model }: { model?: CompanionModel }) {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="mt-24 pt-12 border-t border-valerie-text-metallic/10 flex flex-col md:flex-row items-center justify-between gap-8 relative z-20"
+            className="mt-16 lg:mt-24 pt-8 lg:pt-12 border-t border-valerie-text-metallic/10 flex flex-col md:flex-row items-start md:items-center justify-between gap-8 relative z-20"
           >
             <div>
               <h3 className="text-xl text-valerie-text-primary font-light tracking-wide mb-2 flex items-baseline gap-4">
@@ -263,7 +264,7 @@ export function Personalization({ model }: { model?: CompanionModel }) {
             </div>
             <button 
               onClick={() => addToCart(model, selections, finalPrice)}
-              className="flex items-center justify-center px-10 py-5 bg-valerie-accent-gold text-valerie-bg-dark text-xs font-bold uppercase tracking-widest rounded-sm hover:bg-valerie-accent-white transition-all duration-300 shadow-[0_0_30px_rgba(216,193,160,0.1)] hover:shadow-[0_0_40px_rgba(216,193,160,0.25)]"
+              className="flex w-full md:w-auto items-center justify-center px-10 py-5 bg-valerie-accent-gold text-valerie-bg-dark text-xs font-bold uppercase tracking-widest rounded-full hover:bg-valerie-accent-white transition-all duration-300 shadow-[0_0_30px_rgba(216,193,160,0.1)] hover:shadow-[0_0_40px_rgba(216,193,160,0.25)]"
             >
               <ShoppingBag size={16} className="mr-3" />
               Save Configuration

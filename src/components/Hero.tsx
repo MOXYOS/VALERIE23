@@ -9,13 +9,13 @@ export function Hero() {
     <section id="home" className="relative min-h-screen pt-24 flex flex-col lg:flex-row items-center bg-valerie-bg-dark overflow-hidden">
       
       {/* Left Content */}
-      <div className="flex-1 px-8 lg:px-24 z-10 flex flex-col justify-center">
+      <div className="flex-1 px-4 md:px-8 lg:px-24 z-10 flex flex-col justify-center">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.2 }}
         >
-          <h1 className="text-5xl lg:text-7xl font-thin tracking-tight leading-[1.1] text-valerie-text-primary mb-6">
+          <h1 className="text-4xl sm:text-5xl lg:text-7xl font-thin tracking-tight leading-[1.1] text-valerie-text-primary mb-6 mt-8 lg:mt-0">
             Intelligence <br/> Designed Around <br/> 
             <span className="text-valerie-accent-gold text-glow">Human Connection</span>
           </h1>

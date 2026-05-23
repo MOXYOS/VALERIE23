@@ -10,7 +10,7 @@ const companions = Object.values(modelsData);
 
 export function Collection() {
   return (
-    <section id="collection" className="py-32 px-8 lg:px-24 bg-valerie-bg-mid relative">
+    <section id="collection" className="py-24 md:py-32 px-4 md:px-8 lg:px-24 bg-valerie-bg-mid relative">
       <div className="max-w-[1600px] mx-auto">
         <motion.div 
           initial={{ opacity: 0, y: 30 }}
@@ -20,7 +20,7 @@ export function Collection() {
         >
           <div className="text-center mb-16">
             <p className="text-xs tracking-[0.3em] text-valerie-text-secondary uppercase mb-4">Our Companions</p>
-            <h2 className="text-4xl lg:text-5xl font-thin tracking-wide text-valerie-text-primary">
+            <h2 className="text-4xl sm:text-4xl lg:text-5xl font-thin tracking-wide text-valerie-text-primary">
               Find Your <span className="text-valerie-accent-gold text-glow">Perfect Match</span>
             </h2>
           </div>
