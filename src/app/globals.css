@@ -1,0 +1,57 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: #050505;
+  --color-foreground: #F7F7F7;
+
+  --color-valerie-bg-dark: #050505;
+  --color-valerie-bg-mid: #0B0F14;
+  --color-valerie-bg-light: #12161C;
+  
+  --color-valerie-accent-gold: #D8C1A0;
+  --color-valerie-accent-bronze: #C6A77B;
+  --color-valerie-accent-ivory: #F5F1EB;
+  --color-valerie-accent-white: #FAF8F5;
+  
+  --color-valerie-text-primary: #F7F7F7;
+  --color-valerie-text-secondary: #9A9EA4;
+  --color-valerie-text-metallic: #7D7A74;
+
+  --font-sans: var(--font-inter), sans-serif;
+}
+
+:root {
+  --background: var(--color-background);
+  --foreground: var(--color-foreground);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@layer utilities {
+  .text-glow {
+    text-shadow: 0 0 10px rgba(216, 193, 160, 0.3);
+  }
+  .box-glow {
+    box-shadow: 0 0 20px rgba(216, 193, 160, 0.15);
+  }
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-valerie-bg-dark);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-valerie-bg-light);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-valerie-text-metallic);
+}
