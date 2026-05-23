@@ -72,7 +72,7 @@ export default function DashboardPage() {
 
           <nav className="flex flex-col gap-2">
             {[
-              { id: "overview", label: "Neural Overview", icon: <User size={16} /> },
+              { id: "overview", label: "Valerie 23 Overview", icon: <User size={16} /> },
               { id: "companions", label: "My Companions", icon: <CheckCircle2 size={16} /> },
               { id: "orders", label: "Order History", icon: <Package size={16} /> },
               { id: "settings", label: "Settings", icon: <Settings size={16} /> },
@@ -114,7 +114,7 @@ export default function DashboardPage() {
               <div className="space-y-8">
                 <div>
                   <h2 className="text-3xl font-light text-valerie-text-primary mb-2">Welcome back, {displayName}</h2>
-                  <p className="text-valerie-text-secondary">Your neural sync parameters are fully optimized.</p>
+                  <p className="text-valerie-text-secondary">Your Valerie 23 parameters are fully optimized.</p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -172,7 +172,7 @@ export default function DashboardPage() {
                         <div>
                           <h3 className="text-lg font-light text-valerie-text-primary">{item.model?.name || 'Unknown Model'}</h3>
                           <p className="text-xs text-valerie-accent-gold uppercase tracking-widest mt-1">Status: Imprinting</p>
-                          <p className="text-xs text-valerie-text-secondary mt-2">Neural Link: 99.8% optimized</p>
+                          <p className="text-xs text-valerie-text-secondary mt-2">Valerie 23: 99.8% optimized</p>
                         </div>
                       </div>
                     ))}
@@ -247,7 +247,7 @@ export default function DashboardPage() {
       {showDisconnectModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
           <div className="bg-valerie-bg-dark border border-valerie-text-metallic/20 p-8 rounded-3xl max-w-md w-full shadow-2xl">
-            <h3 className="text-xl text-valerie-text-primary font-light mb-4">Disconnect Neural Link?</h3>
+            <h3 className="text-xl text-valerie-text-primary font-light mb-4">Disconnect Valerie 23?</h3>
             <p className="text-valerie-text-secondary text-sm mb-8">
               Are you sure you want to disconnect? Your session will be terminated and your sync progress securely paused.
             </p>

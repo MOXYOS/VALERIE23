@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { ChevronRight } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 export function Hero() {
   return (
@@ -24,10 +25,10 @@ export function Hero() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-6 mb-16">
-            <button className="group flex items-center justify-center px-8 py-4 bg-valerie-accent-gold text-valerie-bg-dark font-medium tracking-wide rounded-full hover:bg-valerie-accent-white transition-all duration-300">
+            <Link href="#collection" className="group flex items-center justify-center px-8 py-4 bg-valerie-accent-gold text-valerie-bg-dark font-medium tracking-wide rounded-full hover:bg-valerie-accent-white transition-all duration-300">
               Explore Collection
               <ChevronRight size={18} className="ml-2 group-hover:translate-x-1 transition-transform" />
-            </button>
+            </Link>
           </div>
 
           <div className="flex gap-8 text-sm font-light text-valerie-text-metallic border-t border-valerie-text-metallic/20 pt-8">
