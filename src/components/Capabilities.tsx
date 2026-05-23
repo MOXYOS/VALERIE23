@@ -75,7 +75,7 @@ export function Capabilities({ modelName = "Your companion" }: { modelName?: str
       {/* Sticky Tab Navigation (Mobile Pill Menu & Desktop Tabs) */}
       <div className="sticky top-[72px] md:top-[88px] z-30 bg-valerie-bg-dark border-b border-valerie-text-metallic/10 block shadow-[0_10px_30px_rgba(0,0,0,0.5)] md:shadow-none">
         <div className="max-w-[1600px] mx-auto px-4 md:px-8 lg:px-24">
-          <ul className="flex overflow-x-auto hide-scrollbar md:justify-between items-center h-16 md:h-20 text-[10px] md:text-xs tracking-widest font-medium uppercase text-valerie-text-secondary relative gap-2 md:gap-0 py-2 md:py-0">
+          <ul className="flex overflow-x-auto hide-scrollbar md:justify-between items-center text-[10px] md:text-xs tracking-widest font-medium uppercase text-valerie-text-secondary relative gap-2 md:gap-0 py-4 md:py-6">
             {tabs.map((tab) => {
               const isActive = activeTab === tab;
               return (
@@ -99,7 +99,7 @@ export function Capabilities({ modelName = "Your companion" }: { modelName?: str
         </div>
       </div>
 
-      <div className="py-12 md:py-24 px-4 md:px-8 lg:px-24 max-w-[1600px] mx-auto w-full flex-1">
+      <div className="pt-16 pb-12 md:py-24 px-4 md:px-8 lg:px-24 max-w-[1600px] mx-auto w-full flex-1">
         <AnimatePresence mode="wait">
           
           {/* 1. OVERVIEW TAB */}
@@ -209,7 +209,7 @@ export function Capabilities({ modelName = "Your companion" }: { modelName?: str
 
           {/* 4. WHAT'S INCLUDED TAB */}
           {activeTab === "WHAT'S INCLUDED" && (
-            <motion.div key="included" variants={contentVariants} initial="hidden" animate="visible" exit="exit" className="flex flex-col items-center text-center">
+            <motion.div key="included" variants={contentVariants} initial="hidden" animate="visible" exit="exit" className="flex flex-col items-center text-center mt-4">
               <Package size={48} className="text-valerie-accent-gold mb-6 md:mb-8" strokeWidth={1} />
               <h2 className="text-3xl font-light text-valerie-text-primary mb-12 md:mb-16">The Complete Experience</h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 w-full">
