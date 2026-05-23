@@ -203,7 +203,7 @@ export default function CheckoutPage() {
         </div>
       )}
 
-      <div className="flex-1 max-w-[1200px] mx-auto w-full px-4 md:px-8 lg:px-24 pt-48 pb-24 flex flex-col lg:flex-row gap-12 lg:gap-24 relative z-10">
+      <div className="flex-1 max-w-[1200px] mx-auto w-full px-4 md:px-8 lg:px-24 pt-32 lg:pt-48 pb-24 flex flex-col-reverse lg:flex-row gap-12 lg:gap-24 relative z-10">
         
         {/* Left Side: Form Area */}
         <div className="flex-1">

@@ -70,7 +70,7 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          <nav className="flex flex-col gap-2">
+          <nav className="flex flex-row lg:flex-col gap-2 overflow-x-auto pb-4 lg:pb-0 scrollbar-none snap-x">
             {[
               { id: "overview", label: "Valerie 23 Overview", icon: <User size={16} /> },
               { id: "companions", label: "My Companions", icon: <CheckCircle2 size={16} /> },
@@ -80,7 +80,7 @@ export default function DashboardPage() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm tracking-wide transition-all ${
+                className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm tracking-wide transition-all whitespace-nowrap shrink-0 snap-start ${
                   activeTab === tab.id 
                     ? "bg-valerie-accent-gold/10 text-valerie-accent-gold border border-valerie-accent-gold/20" 
                     : "text-valerie-text-secondary hover:text-valerie-text-primary hover:bg-valerie-bg-mid/50"
@@ -102,7 +102,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Main Content Area */}
-        <div className="flex-1 bg-valerie-bg-mid/20 backdrop-blur-md border border-valerie-text-metallic/10 rounded-3xl p-6 md:p-10 lg:p-12 min-h-[600px]">
+        <div className="flex-1 bg-valerie-bg-mid/20 backdrop-blur-md border border-valerie-text-metallic/10 rounded-3xl p-5 md:p-10 lg:p-12 min-h-[600px]">
           
           <motion.div
             key={activeTab}
