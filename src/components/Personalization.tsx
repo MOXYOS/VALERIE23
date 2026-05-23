@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { ShoppingBag, ChevronRight, Feather, Infinity, Activity, Droplets, Waves, Scissors, Sparkles, Eye, AudioWaveform, Radio, Wind, Mic2, HeartHandshake, Heart, Compass, BrainCircuit } from "lucide-react";
+import { motion, AnimatePresence, Variants } from "framer-motion";
+import { ShoppingBag, ChevronRight, Feather, Infinity as InfinityIcon, Activity, Droplets, Waves, Scissors, Sparkles, Eye, AudioWaveform, Radio, Wind, Mic2, HeartHandshake, Heart, Compass, BrainCircuit } from "lucide-react";
 import type { CompanionModel } from "@/data/models";
 import { useCart } from "@/context/CartContext";
 import Image from "next/image";
@@ -14,7 +14,7 @@ const configuratorData = [
     title: "Body Type",
     options: [
       { id: "petite", label: "Petite", desc: "Elegant, slim, and delicate proportions.", icon: Feather, upcharge: 0 },
-      { id: "curvy", label: "Curvy", desc: "Soft, natural lines with a classic hourglass structure.", icon: Infinity, upcharge: 150 },
+      { id: "curvy", label: "Curvy", desc: "Soft, natural lines with a classic hourglass structure.", icon: InfinityIcon, upcharge: 150 },
       { id: "athletic", label: "Athletic", desc: "Toned, defined, and functionally structured.", icon: Activity, upcharge: 250 }
     ]
   },
@@ -70,7 +70,7 @@ const configuratorData = [
   }
 ];
 
-const iconVariants = {
+const iconVariants: Variants = {
   idle: { scale: 1, opacity: 0.6, y: 0 },
   hover: { scale: 1.1, opacity: 1, y: -2, transition: { duration: 0.3 } },
   active: { 
@@ -78,7 +78,7 @@ const iconVariants = {
     opacity: 1,
     y: [0, -4, 0],
     filter: "drop-shadow(0px 0px 8px rgba(216,193,160,0.6))",
-    transition: { y: { repeat: Infinity, duration: 3, ease: "easeInOut" } }
+    transition: { y: { repeat: Number.POSITIVE_INFINITY, duration: 3, ease: "easeInOut" } }
   }
 };
 
@@ -178,8 +178,8 @@ export function Personalization({ model }: { model?: CompanionModel }) {
                 >
                   {activeCategory.options.map((option) => {
                     const isSelected = selections[activeCategory.title] === option.label;
-                    const hasImage = !!option.image;
-                    const Icon = option.icon;
+                    const hasImage = 'image' in option ? !!option.image : false;
+                    const Icon = 'icon' in option ? option.icon : null;
 
                     return (
                       <motion.button
@@ -197,7 +197,7 @@ export function Personalization({ model }: { model?: CompanionModel }) {
                         {hasImage && (
                           <div className="relative w-full aspect-[4/3] overflow-hidden mb-4 bg-valerie-bg-dark">
                             <Image 
-                              src={option.image!} 
+                              src={(option as any).image!} 
                               alt={option.label}
                               fill
                               className={`object-cover transition-transform duration-1000 ${isSelected ? 'scale-105' : 'group-hover:scale-105'}`}

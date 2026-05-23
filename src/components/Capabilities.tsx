@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, Variants } from "framer-motion";
 import { MessageSquare, Heart, BrainCircuit, Home, Eye, Activity, ShieldCheck, Smartphone, ArrowRight, Battery, Cpu, Fingerprint, Wifi, Package, Truck, ShieldAlert } from "lucide-react";
 
 const tabs = ["OVERVIEW", "FEATURES", "TECH SPECS", "WHAT'S INCLUDED", "SHIPPING & RETURNS"];
@@ -63,7 +63,7 @@ export function Capabilities({ modelName = "Your companion" }: { modelName?: str
   const [activeTab, setActiveTab] = useState(tabs[0]);
 
   // Framer motion variants for tab content
-  const contentVariants = {
+  const contentVariants: Variants = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
     exit: { opacity: 0, y: -20, transition: { duration: 0.3, ease: "easeIn" } }
