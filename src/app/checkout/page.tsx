@@ -18,7 +18,7 @@ const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
 
 type CheckoutStep = "shipping" | "payment" | "success";
 
-function CheckoutForm({ clientSecret, total, onPaymentSuccess }: { clientSecret: string, total: number, onPaymentSuccess: () => void }) {
+function CheckoutForm({ clientSecret, total, cartItems, onPaymentSuccess }: { clientSecret: string, total: number, cartItems: any[], onPaymentSuccess: (paymentIntentId: string) => void }) {
   const stripe = useStripe();
   const elements = useElements();
   const [isProcessing, setIsProcessing] = useState(false);
@@ -33,7 +33,7 @@ function CheckoutForm({ clientSecret, total, onPaymentSuccess }: { clientSecret:
 
     setIsProcessing(true);
 
-    const { error } = await stripe.confirmPayment({
+    const { error, paymentIntent } = await stripe.confirmPayment({
       elements,
       redirect: 'if_required', // We handle success manually instead of full redirect
     });
@@ -41,8 +41,23 @@ function CheckoutForm({ clientSecret, total, onPaymentSuccess }: { clientSecret:
     if (error) {
       setErrorMessage(error.message ?? "An unknown error occurred.");
       setIsProcessing(false);
-    } else {
-      onPaymentSuccess();
+    } else if (paymentIntent && paymentIntent.status === 'succeeded') {
+      
+      // Hit our own API to record the order since local webhooks are hard to test
+      try {
+        await fetch('/api/orders/confirm', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            paymentIntentId: paymentIntent.id,
+            items: cartItems,
+          }),
+        });
+      } catch (err) {
+        console.error("Failed to record order locally", err);
+      }
+
+      onPaymentSuccess(paymentIntent.id);
     }
   };
 
@@ -84,7 +99,7 @@ function CheckoutForm({ clientSecret, total, onPaymentSuccess }: { clientSecret:
 }
 
 export default function CheckoutPage() {
-  const { cart } = useCart();
+  const { cart, clearCart } = useCart();
   const router = useRouter();
   const [step, setStep] = useState<CheckoutStep>("shipping");
   const [clientSecret, setClientSecret] = useState<string | null>(null);
@@ -129,9 +144,9 @@ export default function CheckoutPage() {
     if (step === "payment") setStep("shipping");
   };
 
-  const handlePaymentSuccess = () => {
+  const handlePaymentSuccess = (paymentIntentId: string) => {
     setStep("success");
-    // Normally, we'd clear cart here, but wait until webhook confirms order
+    clearCart();
   };
 
   return (
@@ -209,7 +224,7 @@ export default function CheckoutPage() {
                 
                 {clientSecret ? (
                   <Elements stripe={stripePromise} options={{ clientSecret }}>
-                    <CheckoutForm clientSecret={clientSecret} total={total} onPaymentSuccess={handlePaymentSuccess} />
+                    <CheckoutForm clientSecret={clientSecret} total={total} cartItems={cart} onPaymentSuccess={handlePaymentSuccess} />
                   </Elements>
                 ) : (
                   <div className="py-12 flex items-center justify-center text-valerie-text-metallic">

@@ -15,6 +15,8 @@ interface CartContextType {
   isCartOpen: boolean;
   addToCart: (model: CompanionModel, selections: Record<string, string>, finalPrice?: number) => void;
   removeFromCart: (itemId: string) => void;
+  updateCartItem: (id: string, updates: Partial<CartItem>) => void;
+  clearCart: () => void;
   toggleCart: () => void;
   openCart: () => void;
   closeCart: () => void;
@@ -41,12 +43,18 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setCart((prev) => prev.filter(item => item.id !== itemId));
   };
 
+  const updateCartItem = (id: string, updates: Partial<CartItem>) => {
+    setCart(prev => prev.map(item => item.id === id ? { ...item, ...updates } : item));
+  };
+
+  const clearCart = () => setCart([]);
+
   const toggleCart = () => setIsCartOpen((prev) => !prev);
   const openCart = () => setIsCartOpen(true);
   const closeCart = () => setIsCartOpen(false);
 
   return (
-    <CartContext.Provider value={{ cart, isCartOpen, addToCart, removeFromCart, toggleCart, openCart, closeCart }}>
+    <CartContext.Provider value={{ cart, isCartOpen, addToCart, removeFromCart, updateCartItem, clearCart, toggleCart, openCart, closeCart }}>
       {children}
     </CartContext.Provider>
   );

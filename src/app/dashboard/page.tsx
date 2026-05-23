@@ -11,12 +11,31 @@ export default function DashboardPage() {
   const { user, profile, isAuthenticated, isLoading, logout } = useAuth();
   const router = useRouter();
   const [activeTab, setActiveTab] = useState("overview");
+  const [orders, setOrders] = useState<any[]>([]);
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
       router.push("/login");
     }
   }, [isAuthenticated, isLoading, router]);
+
+  useEffect(() => {
+    // Fetch orders if user is loaded
+    if (user) {
+      const fetchOrders = async () => {
+        const { createClient } = await import('@/utils/supabase/client');
+        const supabase = createClient();
+        const { data } = await supabase
+          .from('orders')
+          .select('*')
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: false });
+        
+        if (data) setOrders(data);
+      };
+      fetchOrders();
+    }
+  }, [user]);
 
   if (isLoading || !user) {
     return (
@@ -107,7 +126,9 @@ export default function DashboardPage() {
                   </div>
                   <div className="bg-valerie-bg-dark/50 p-6 rounded-2xl border border-valerie-text-metallic/10">
                     <p className="text-xs text-valerie-text-metallic uppercase tracking-widest mb-4">Companions</p>
-                    <div className="text-2xl text-valerie-accent-white">0</div>
+                    <div className="text-2xl text-valerie-accent-white">
+                      {orders.reduce((sum, order) => sum + (order.items?.length || 0), 0)}
+                    </div>
                   </div>
                   <div className="bg-valerie-bg-dark/50 p-6 rounded-2xl border border-valerie-text-metallic/10">
                     <p className="text-xs text-valerie-text-metallic uppercase tracking-widest mb-4">Compatibility Score</p>
@@ -130,14 +151,32 @@ export default function DashboardPage() {
             {activeTab === "companions" && (
               <div>
                 <h2 className="text-2xl font-light text-valerie-text-primary mb-6">My Companions</h2>
-                <div className="flex flex-col items-center justify-center py-20 text-center border border-dashed border-valerie-text-metallic/20 rounded-2xl">
-                  <User size={48} className="text-valerie-text-metallic/30 mb-4" strokeWidth={1} />
-                  <p className="text-valerie-text-primary text-lg mb-2">No active companions</p>
-                  <p className="text-valerie-text-secondary text-sm max-w-xs mx-auto mb-6">You have not finalized any purchases yet.</p>
-                  <button onClick={() => router.push('/#collection')} className="text-valerie-accent-gold text-sm tracking-widest uppercase hover:text-valerie-accent-white transition-colors">
-                    Explore Models
-                  </button>
-                </div>
+                {orders.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center py-20 text-center border border-dashed border-valerie-text-metallic/20 rounded-2xl">
+                    <User size={48} className="text-valerie-text-metallic/30 mb-4" strokeWidth={1} />
+                    <p className="text-valerie-text-primary text-lg mb-2">No active companions</p>
+                    <p className="text-valerie-text-secondary text-sm max-w-xs mx-auto mb-6">You have not finalized any purchases yet.</p>
+                    <button onClick={() => router.push('/#collection')} className="text-valerie-accent-gold text-sm tracking-widest uppercase hover:text-valerie-accent-white transition-colors">
+                      Explore Models
+                    </button>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {orders.flatMap(order => order.items || []).map((item: any, idx: number) => (
+                      <div key={idx} className="bg-valerie-bg-dark/50 border border-valerie-text-metallic/20 rounded-2xl p-6 flex gap-6 items-center">
+                        <div className="w-20 h-20 rounded-full bg-valerie-bg-mid flex-shrink-0 flex items-center justify-center overflow-hidden border border-valerie-accent-gold/30">
+                          {/* Placeholder for model image */}
+                          <User size={32} className="text-valerie-accent-gold/50" />
+                        </div>
+                        <div>
+                          <h3 className="text-lg font-light text-valerie-text-primary">{item.model?.name || 'Unknown Model'}</h3>
+                          <p className="text-xs text-valerie-accent-gold uppercase tracking-widest mt-1">Status: Imprinting</p>
+                          <p className="text-xs text-valerie-text-secondary mt-2">Neural Link: 99.8% optimized</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
 
@@ -157,11 +196,22 @@ export default function DashboardPage() {
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
-                        <td colSpan={4} className="py-8 text-center text-valerie-text-metallic/50">
-                          No transaction history found.
-                        </td>
-                      </tr>
+                      {orders.length === 0 ? (
+                        <tr>
+                          <td colSpan={4} className="py-8 text-center text-valerie-text-metallic/50">
+                            No transaction history found.
+                          </td>
+                        </tr>
+                      ) : (
+                        orders.map(order => (
+                          <tr key={order.id} className="border-b border-valerie-text-metallic/5 last:border-0">
+                            <td className="py-4 font-mono text-valerie-text-primary">{order.id.substring(0,8)}</td>
+                            <td className="py-4">{new Date(order.created_at).toLocaleDateString()}</td>
+                            <td className="py-4"><span className="px-2 py-1 bg-valerie-accent-gold/10 text-valerie-accent-gold rounded text-xs">{order.status}</span></td>
+                            <td className="py-4 text-right">${order.total_amount?.toLocaleString()}</td>
+                          </tr>
+                        ))
+                      )}
                     </tbody>
                   </table>
                 </div>
