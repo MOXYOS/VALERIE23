@@ -112,7 +112,10 @@ export function CartDrawer() {
                 </div>
                 
                 <button 
-                  onClick={() => alert("Checkout integration starting soon...")}
+                  onClick={() => {
+                    closeCart();
+                    window.location.href = '/checkout';
+                  }}
                   className="w-full flex items-center justify-center px-8 py-4 bg-valerie-accent-gold text-valerie-bg-dark font-medium tracking-wide rounded-full hover:bg-valerie-accent-white transition-all duration-300"
                 >
                   Proceed to Secure Checkout

@@ -5,12 +5,14 @@ import { motion, AnimatePresence } from "framer-motion";
 import { User, Heart, ShoppingBag, Menu, X } from "lucide-react";
 import Link from "next/link";
 import { useCart } from "@/context/CartContext";
+import { useAuth } from "@/context/AuthContext";
 import { CartDrawer } from "@/components/CartDrawer";
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { cart, toggleCart } = useCart();
+  const { isAuthenticated } = useAuth();
 
   return (
     <>
@@ -34,9 +36,12 @@ export function Navbar() {
         </div>
 
         <div className="flex flex-1 justify-end space-x-6 text-valerie-text-secondary items-center">
-          <button className="hidden md:block hover:text-valerie-accent-white transition-colors">
+          <Link 
+            href={isAuthenticated ? "/dashboard" : "/login"} 
+            className="hidden md:block hover:text-valerie-accent-white transition-colors"
+          >
             <User size={20} strokeWidth={1.5} />
-          </button>
+          </Link>
           <button className="hidden md:block hover:text-valerie-accent-white transition-colors">
             <Heart size={20} strokeWidth={1.5} />
           </button>
@@ -73,6 +78,9 @@ export function Navbar() {
               <Link href="/" onClick={() => setIsMobileMenuOpen(false)}>Home</Link>
               <Link href="/#collection" onClick={() => setIsMobileMenuOpen(false)}>Collection</Link>
               <Link href="/#technology" onClick={() => setIsMobileMenuOpen(false)}>Technology</Link>
+              <Link href={isAuthenticated ? "/dashboard" : "/login"} onClick={() => setIsMobileMenuOpen(false)}>
+                {isAuthenticated ? "Dashboard" : "Sign In"}
+              </Link>
             </div>
             <button 
               onClick={() => setIsMobileMenuOpen(false)}
